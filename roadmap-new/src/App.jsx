@@ -1,687 +1,668 @@
 import { useState } from "react";
 
-const phases = [
+// ─── DATA ────────────────────────────────────────────────────────────────────
+
+const weeks = [
+  // ── FAZA 1: JavaScript Solid ──────────────────────────────────────────────
   {
-    id: 1,
-    title: "JavaScript Solid",
-    subtitle: "Umple găurile din fundație",
-    weeks: "1–8",
-    color: "#F5C518",
-    textColor: "#000",
-    goal: "La final înțelegi 100% fiecare linie de JS din proiectele tale",
-    modules: [
-      {
-        id: "1-1",
-        week: "1–2",
-        topic: "JavaScript Fundamentals — variabile, funcții, arrays, objects",
-        books: ["JavaScript: The Definitive Guide (cap. 3–6, referință)"],
-        online: "javascript.info — Cap. 2 (Fundamentals) + Cap. 4 (Objects) + Cap. 5 (Data types)",
-        onlineUrl: "https://javascript.info",
-        checkpoint: "Scrii o funcție JS din memorie care transformă un array de obiecte fără să cauți sintaxa",
-        todos: [
-          { id: "1-1-1", day: "Zi 1", text: "Citește javascript.info 2.1–2.7. Exercițiu: 1) Creează test.js. 2) Declară 3 variabile cu let, const, var și observă diferențele. 3) Scrie o funcție care primește două numere și returnează suma, diferența și produsul lor. 4) Testează cu console.log." },
-          { id: "1-1-2", day: "Zi 2", text: "Citește javascript.info 2.8–2.15. Exercițiu: 1) Scrie un loop care iterează de la 1 la 10 și printează doar numerele pare. 2) Scrie o funcție arrow care primește un string și returnează lungimea lui. 3) Rescrie aceeași funcție ca function declaration. Observă diferența." },
-          { id: "1-1-3", day: "Zi 3", text: "Citește javascript.info 4.1–4.4. Exercițiu: 1) Creează un obiect factura cu proprietățile: id, client, suma, data. 2) Adaugă o metodă descriere() care returnează un string formatat. 3) Creează 3 facturi și pune-le într-un array. 4) Accesează proprietățile cu dot notation și bracket notation." },
-          { id: "1-1-4", day: "Zi 4", text: "Citește javascript.info 5.1–5.3. Exercițiu: 1) Pornești de la array-ul de 3 facturi de ieri. 2) Folosește .filter() să returnezi doar facturile peste 500 RON. 3) Folosește .map() să returnezi doar numele clienților. 4) Folosește .reduce() să calculezi totalul tuturor facturilor. 5) Înlănțuiește toate trei într-o singură expresie." },
-          { id: "1-1-5", day: "Zi 5", text: "Citește javascript.info 5.4–5.7. Exercițiu: 1) Destructurează obiectul factura: const { client, suma } = factura. 2) Creează un Map cu clientId → numeClient. 3) Creează un Set din array-ul de clienți (elimină duplicatele). 4) Folosește spread operator să combini două array-uri de facturi." },
-          { id: "1-1-6", day: "Zi 6", text: "Citește javascript.info 4.5–4.8 — Object methods, optional chaining. Exercițiu: 1) Ai const user = { nume: 'Ion', adresa: { oras: 'București' } }. 2) Accesează user?.adresa?.oras — ce se întâmplă dacă adresa lipsește? 3) Scrie const port = config?.port ?? 3000 și explică ce face ??. 4) Folosește spread să copiezi un obiect și să suprascrii o proprietate: {...factura, suma: 999}. 5) Fă exercițiile de pe javascript.info la finalul capitolelor." },
-          { id: "1-1-7", day: "Zi 7", text: "Citește javascript.info 5.8–5.12 — Date, JSON, Object methods. Exercițiu: 1) Creează o dată cu new Date() și formatează-o ca 'DD/MM/YYYY'. 2) Convertește un obiect factură la JSON cu JSON.stringify(). 3) Parsează un string JSON cu JSON.parse(). 4) Folosește Object.keys(), Object.values(), Object.entries() pe un obiect factură și explică ce returnează fiecare." },
-          { id: "1-1-8", day: "Zi 8", text: "JS Definitive Guide cap. 3–4 — citit selectiv ca referință. Exercițiu: 1) Caută în carte: type coercion. 2) Testează: '5' + 3, '5' - 3, !!0, !!'' — ce returnează? 3) Explică în scris de ce JavaScript face asta. 4) Scrie 3 exemple reale din cod unde type coercion poate cauza bug-uri neașteptate." },
-          { id: "1-1-9", day: "Zi 9", text: "Exercițiu complet fără să cauți: 1) Creează un array de 5 facturi cu {id, client, suma, luna}. 2) Scrie filterByMonth(arr, luna) care returnează facturile din luna dată. 3) Scrie totalByClient(arr, client) care returnează suma totală pentru un client. 4) Scrie topClients(arr) care returnează clienții sortați după total descrescător. 5) Testează toate funcțiile cu console.log." },
-          { id: "1-1-10", day: "Zi 10 — CHECKPOINT", text: "1) Deschide un fișier .tsx din ECapturo sau Invoysr. 2) Citește-l complet. 3) Scrie pe hârtie ce face fiecare bloc de cod. 4) Dacă dai de ceva ce nu înțelegi, notează exact ce și reia ziua corespunzătoare. Nu trece mai departe dacă ai mai mult de 2 lucruri neclare." },
-        ]
-      },
-      {
-        id: "1-2",
-        week: "3–4",
-        topic: "JS Avansat — closures, scope, this + Async",
-        books: ["JavaScript: The Definitive Guide (cap. 8 — Functions, cap. 13 — Async)"],
-        online: "javascript.info — Cap. 6 (Functions avansate) + Cap. 11 (Async)",
-        onlineUrl: "https://javascript.info",
-        checkpoint: "Explici closures și async/await unui coleg și rescrii orice fetch din proiect fără să cauți",
-        todos: [
-          { id: "1-2-1", day: "Zi 1", text: "Citește javascript.info 6.1–6.3 — closures și scope. Exercițiu: 1) Scrie o funcție makeCounter() care returnează o altă funcție. 2) La fiecare apel al funcției returnate, contorul crește. 3) Creează 2 contoare independente și demonstrează că nu se influențează. 4) Explică în scris de ce funcționează — asta e un closure." },
-          { id: "1-2-2", day: "Zi 2", text: "Citește javascript.info 6.4–6.6 — this și binding. Exercițiu: 1) Creează un obiect timer cu o metodă start(). 2) Pune start() într-un setTimeout și observă că this e undefined. 3) Repară cu arrow function. 4) Repară alternativ cu .bind(this). 5) Explică diferența dintre cele două soluții." },
-          { id: "1-2-3", day: "Zi 3", text: "Citește javascript.info 6.7–6.9. Exercițiu: 1) Scrie o funcție delay(fn, ms) care returnează o versiune întârziată a funcției fn. 2) Testează: const delayedLog = delay(console.log, 1000). 3) Apelează delayedLog('hello') și verifică că apare după 1 secundă. 4) Asta e un decorator — notează definiția." },
-          { id: "1-2-4", day: "Zi 4", text: "Citește javascript.info 11.1–11.3. Exercițiu: 1) Scrie o funcție fetchUser(id) care returnează un Promise. 2) Simulează un delay cu setTimeout în interiorul Promise-ului. 3) Înlănțuiește: fetchUser(1).then(user => fetchOrders(user.id)).then(orders => console.log(orders)). 4) Adaugă .catch() la final." },
-          { id: "1-2-5", day: "Zi 5", text: "Citește javascript.info 11.4–11.5. Exercițiu: 1) Ai 3 funcții care returnează Promise-uri: fetchUser(), fetchOrders(), fetchProducts(). 2) Rulează-le în paralel cu Promise.all și loghează toate rezultatele. 3) Modifică: dacă oricare eșuează, Promise.all eșuează — testează asta. 4) Înlocuiește cu Promise.allSettled și observă diferența." },
-          { id: "1-2-6", day: "Zi 6", text: "Citește javascript.info 11.6–11.7. Exercițiu: 1) Ia funcția cu .then() de la Zi 4. 2) Rescrie-o complet cu async/await. 3) Adaugă try/catch pentru error handling. 4) Deschide ECapturo. Găsește un fetch real. Rescrie-l cu .then() pur — fără async/await. Înțelege ce face await de fapt." },
-          { id: "1-2-7", day: "Zi 7", text: "JS Definitive Guide cap. 8 — citit selectiv. Exercițiu: 1) Scrie o funcție memoize(fn) care cachează rezultatele. 2) Testează cu o funcție lentă (cu setTimeout). 3) Al doilea apel cu aceiași parametri trebuie să fie instant. 4) Asta combină closures + higher-order functions — identifică ambele concepte în codul tău." },
-          { id: "1-2-8", day: "Zi 8", text: "Exercițiu integrat: 1) Deschide ECapturo. 2) Găsește cel mai complex bloc de cod async. 3) Desenează pe hârtie fluxul: ce se apelează, în ce ordine, ce se întâmplă dacă ceva eșuează. 4) Identifică toate closure-urile din acel bloc. 5) Dacă nu găsești niciunul, caută în altă parte din cod." },
-          { id: "1-2-9", day: "Zi 9", text: "Exercițiu complet fără să cauți: 1) Scrie fetchAll(urls) care primește un array de URL-uri. 2) Face toate request-urile în paralel. 3) Dacă oricare eșuează, continuă cu celelalte (nu se oprește). 4) Returnează un array cu {url, data, error} pentru fiecare. 5) Testează cu 3 URL-uri reale și unul greșit." },
-          { id: "1-2-10", day: "Zi 10 — CHECKPOINT", text: "1) Explică în scris (GoodNotes) ce e un closure — fără să copiezi definiția. 2) Deschide un API route din proiectele tale. 3) Rescrie-l fără async/await — doar .then(). 4) Dacă te blochezi la oricare din pași, reia zilele 1 și 4 înainte să continui." },
-        ]
-      },
-      {
-        id: "1-3",
-        week: "5–6",
-        topic: "React — cum funcționează cu adevărat",
-        books: ["Head First Design Patterns (cap. 1–2) — pentru a înțelege pattern-uri în componente"],
-        online: "react.dev/learn — Describing UI + Adding Interactivity",
-        onlineUrl: "https://react.dev/learn",
-        checkpoint: "Știi de ce se rerenderizează o componentă și cum să oprești rerenderizările inutile",
-        todos: [
-          { id: "1-3-1", day: "Zi 1", text: "Citește react.dev — Your First Component. Exercițiu: 1) Creează un fișier Button.tsx. 2) Exportează o componentă Button care primește prop label. 3) Randează 3 butoane cu label-uri diferite în App.tsx. 4) Verifică în browser că apar corect." },
-          { id: "1-3-2", day: "Zi 2", text: "Citește react.dev — JSX + Props. Exercițiu: 1) Creează o componentă InvoiceCard cu props: client, suma, data. 2) Stilizează-o cu Tailwind — border, padding, text. 3) Randează 3 InvoiceCard-uri cu date diferite. 4) Adaugă un prop opțional isPaid cu valoare default false care schimbă culoarea border-ului." },
-          { id: "1-3-3", day: "Zi 3", text: "Citește react.dev — Conditional rendering + Lists. Exercițiu: 1) Ai un array de 5 facturi. 2) Randează lista cu .map() — fiecare cu key unic. 3) Adaugă un buton 'Arată doar neplătite'. 4) Când e apăsat, lista se filtrează. 5) Dacă lista e goală, arată un mesaj 'Nicio factură găsită'." },
-          { id: "1-3-4", day: "Zi 4", text: "Citește react.dev — useState. Exercițiu: 1) Creează un form cu input pentru client și sumă. 2) Controlează ambele câmpuri cu useState. 3) La submit, adaugă factura în array-ul de facturi (tot cu useState). 4) Lista se actualizează instant. 5) Curăță form-ul după submit." },
-          { id: "1-3-5", day: "Zi 5", text: "Citește react.dev — State as snapshot. Exercițiu: 1) Scrie un buton care face +1 de 3 ori în același handler: setCount(count+1); setCount(count+1); setCount(count+1). 2) Observă că adaugă doar 1, nu 3. 3) Repară cu forma funcțională: setCount(c => c+1). 4) Explică în scris de ce funcționează acum." },
-          { id: "1-3-6", day: "Zi 6", text: "Citește react.dev — useEffect. Exercițiu: 1) Adaugă un useEffect care loghează 'rendered' la fiecare render. 2) Adaugă dependency array gol [] — loghează doar la mount. 3) Adaugă suma în dependency array — loghează când suma se schimbă. 4) Adaugă un cleanup care loghează 'cleanup'. 5) Observă ordinea în consolă." },
-          { id: "1-3-7", day: "Zi 7", text: "Citește react.dev — Lifting state up. Exercițiu: 1) Ai 2 componente surori: InvoiceList și InvoiceTotal. 2) Mută state-ul de facturi în componenta părinte. 3) Pasează lista la InvoiceList ca prop. 4) Pasează totalul calculat la InvoiceTotal ca prop. 5) Adaugă o factură din InvoiceList și verifică că totalul se actualizează." },
-          { id: "1-3-8", day: "Zi 8", text: "Head First Design Patterns cap. 1–2. Exercițiu: 1) Citește despre Observer pattern. 2) Identifică unde React folosește Observer (hint: useState + re-render). 3) Scrie în GoodNotes: ce pattern-uri recunoști în codul React pe care l-ai scris săptămâna asta." },
-          { id: "1-3-9", day: "Zi 9", text: "Exercițiu complet fără tutorial: 1) Creează un mini-dashboard cu 3 componente: FilterBar, InvoiceList, Summary. 2) FilterBar are un input de search și un select pentru lună. 3) InvoiceList afișează facturile filtrate. 4) Summary arată totalul facturilor vizibile. 5) Toate comunică prin state în componenta părinte." },
-          { id: "1-3-10", day: "Zi 10 — CHECKPOINT", text: "1) Deschide o componentă React din ECapturo. 2) Identifică: toate useState-urile, toate useEffect-urile, ce props primește, ce props pasează mai departe. 3) Explică cu voce tare de ce se rerenderizează componenta. 4) Dacă nu poți răspunde la oricare, reia zilele 4–6." },
-        ]
-      },
-      {
-        id: "1-4",
-        week: "7–8",
-        topic: "Next.js — routing, API routes, server vs client",
-        books: ["HTML & CSS — Jon Duckett (recitit rapid, cap. 1–8, pentru fundație solidă)"],
-        online: "nextjs.org/docs — App Router fundamentals",
-        onlineUrl: "https://nextjs.org/docs",
-        checkpoint: "Știi diferența dintre Server Component și Client Component și când folosești fiecare",
-        todos: [
-          { id: "1-4-1", day: "Zi 1", text: "Citește Next.js docs — App Router overview. Exercițiu: 1) Desenează pe hârtie arhitectura App Router: root layout, page.tsx, nested routes. 2) Creează un proiect nou Next.js cu npx create-next-app. 3) Adaugă 3 rute: /, /facturi, /facturi/[id]. 4) Verifică că funcționează în browser." },
-          { id: "1-4-2", day: "Zi 2", text: "Citește Next.js docs — Layouts + Pages. Exercițiu: 1) Creează un layout.tsx pentru /facturi cu un sidebar. 2) Sidebar-ul conține linkuri de navigare cu <Link>. 3) Fiecare pagină de factură afișează params.id în titlu. 4) Stilizează cu Tailwind astfel încât layout-ul să persistă între pagini." },
-          { id: "1-4-3", day: "Zi 3", text: "Citește Next.js docs — Server vs Client Components. Exercițiu: 1) Creează o componentă ServerTime care afișează ora curentă — fă-o Server Component. 2) Creează un Counter cu useState — trebuie să fie Client Component ('use client'). 3) Combină-le: ServerTime în interiorul paginii, Counter ca sub-componentă. 4) Explică în scris de ce ServerTime nu poate folosi useState." },
-          { id: "1-4-4", day: "Zi 4", text: "Citește Next.js docs — Data Fetching. Exercițiu: 1) Într-o Server Component, fetch date de la https://jsonplaceholder.typicode.com/todos. 2) Adaugă { next: { revalidate: 60 } } la fetch — revalidare la 60 secunde. 3) Afișează primele 10 rezultate. 4) Adaugă loading.tsx pentru pagina respectivă. 5) Adaugă error.tsx." },
-          { id: "1-4-5", day: "Zi 5", text: "Citește Next.js docs — Route Handlers (API Routes). Exercițiu: 1) Creează app/api/facturi/route.ts. 2) GET returnează un array de facturi mock. 3) POST primește { client, suma } și adaugă factura. 4) Adaugă validare: dacă suma lipsește, returnează 400 cu mesaj de eroare. 5) Testează cu curl sau Postman." },
-          { id: "1-4-6", day: "Zi 6", text: "Jon Duckett HTML&CSS cap. 1–8 — recitit rapid. Exercițiu: 1) Ia pagina /facturi din proiectul tău. 2) Fă layout-ul responsive: pe mobile e o coloană, pe desktop două coloane. 3) Folosește doar Tailwind (nu CSS custom). 4) Testează în DevTools la diferite dimensiuni de ecran." },
-          { id: "1-4-7", day: "Zi 7", text: "Exercițiu integrat: 1) Adaugă o pagină /facturi/nou cu un form. 2) Form-ul are câmpuri pentru client, sumă, dată. 3) La submit, face POST la /api/facturi. 4) Dacă succees, redirectează la /facturi. 5) Dacă eroare, afișează mesajul de eroare lângă câmpul respectiv." },
-          { id: "1-4-8", day: "Zi 8", text: "Citește Next.js docs — Middleware. Exercițiu: 1) Creează middleware.ts în root. 2) Protejează toate rutele /facturi — dacă userul nu e logat, redirect la /login. 3) Testează: accesează /facturi fără să fii logat. 4) Logează-te și verifică că funcționează normal." },
-          { id: "1-4-9", day: "Zi 9", text: "Citește Next.js docs — Image + Font optimization. Exercițiu: 1) Înlocuiește orice <img> din proiect cu <Image> din next/image. 2) Adaugă un font Google cu next/font. 3) Deschide DevTools → Network tab. 4) Compară dimensiunea imaginilor înainte și după. 5) Notează diferența." },
-          { id: "1-4-10", day: "Zi 10 — CHECKPOINT", text: "1) Fără să cauți, explică în scris: ce e SSR, SSG, ISR și când folosești fiecare. 2) Deschide un proiect Next.js existent. 3) Identifică: care componente sunt Server, care sunt Client și de ce. 4) Dacă nu poți explica SSR/SSG/ISR, reia zilele 3–4 înainte să continui." },
-        ]
-      }
-    ]
+    week: 1, phase: 1, phaseTitle: "JavaScript Solid", color: "#F5C518",
+    topic: "JS Fundamentals — variabile, funcții, arrays",
+    resource: "javascript.info — Cap. 2",
+    resourceUrl: "https://javascript.info/first-steps",
+    days: [
+      { day: 1, title: "Variabile & tipuri", read: "javascript.info 2.1–2.7", task: "Creează test.js. Declară variabile cu let, const, var. Scrie o funcție care primește două numere și returnează suma, diferența și produsul. Testează cu console.log." },
+      { day: 2, title: "Loops & funcții", read: "javascript.info 2.8–2.15", task: "Scrie un loop care printează numerele pare de la 1 la 10. Scrie o funcție arrow și rescrie-o ca function declaration. Observă diferența." },
+      { day: 3, title: "Objects", read: "javascript.info 4.1–4.4", task: "Creează un obiect factura cu id, client, suma, data. Adaugă o metodă descriere(). Creează 3 facturi într-un array. Accesează proprietățile cu dot și bracket notation." },
+      { day: 4, title: "Arrays avansate", read: "javascript.info 5.1–5.3", task: "Pornind de la array-ul de facturi: folosește .filter() pentru facturi > 500 RON, .map() pentru numele clienților, .reduce() pentru total. Înlănțuiește toate trei." },
+      { day: 5, title: "Destructuring & Map/Set", read: "javascript.info 5.4–5.7", task: "Destructurează un obiect factură. Creează un Map cu clientId→numeClient. Creează un Set care elimină clienții duplicați. Combină două array-uri cu spread." },
+      { day: 6, title: "Optional chaining & spread", read: "javascript.info 4.5–4.8", task: "Testează user?.adresa?.oras pe un obiect fără adresă. Scrie const port = config?.port ?? 3000. Copiază un obiect suprascriind o proprietate: {...factura, suma: 999}." },
+      { day: 7, title: "Date, JSON, Object methods", read: "javascript.info 5.8–5.12", task: "Creează o dată cu new Date() și formatează ca DD/MM/YYYY. Convertește o factură la JSON și parsează înapoi. Folosește Object.keys(), Object.values(), Object.entries()." },
+    ],
+    checkpoint: "Scrii din memorie filterByMonth(arr, luna) și topClients(arr) fără să cauți sintaxa."
   },
   {
-    id: 2,
-    title: "Full Stack Independent",
-    subtitle: "Construiești de la 0 fără ajutor",
-    weeks: "9–20",
-    color: "#00C896",
-    textColor: "#000",
-    goal: "Poți construi orice SaaS de la 0: auth, DB, API, UI, plăți — singur",
-    modules: [
-      {
-        id: "2-1",
-        week: "9–10",
-        topic: "Baze de date — SQL & Supabase în profunzime",
-        books: ["Seven Databases in Seven Weeks (primele 2 capitole — PostgreSQL)"],
-        online: "sqlzoo.net + Supabase docs — Database section",
-        onlineUrl: "https://sqlzoo.net",
-        checkpoint: "Scrii queries cu JOIN, GROUP BY, subqueries fără să cauți sintaxa",
-        todos: [
-          { id: "2-1-1", day: "Zi 1", text: "sqlzoo.net — SELECT basics. Exercițiu după: 1) Deschide Supabase SQL editor. 2) Creează un tabel facturi cu: id, client_id, suma, created_at, is_paid. 3) Inserează 5 rânduri de test manual. 4) Scrie SELECT * FROM facturi. 5) Scrie SELECT client_id, suma FROM facturi WHERE suma > 500." },
-          { id: "2-1-2", day: "Zi 2", text: "sqlzoo.net — SELECT from World. Exercițiu: 1) Scrie un query care returnează facturile din ultima lună: WHERE created_at > NOW() - INTERVAL '30 days'. 2) Sortează după sumă descrescător: ORDER BY suma DESC. 3) Limitează la primele 3: LIMIT 3. 4) Combină toate trei într-un singur query." },
-          { id: "2-1-3", day: "Zi 3", text: "sqlzoo.net — SELECT within SELECT. Exercițiu: 1) Creează un tabel clienti cu id și nume. 2) Scrie un query cu subquery: SELECT * FROM facturi WHERE client_id IN (SELECT id FROM clienti WHERE nume LIKE 'Ion%'). 3) Rescrieți cu JOIN în loc de subquery. 4) Explică în scris când preferi subquery vs JOIN." },
-          { id: "2-1-4", day: "Zi 4", text: "sqlzoo.net — SUM și JOIN. Exercițiu: 1) Scrie un JOIN între facturi și clienti pentru a obține numele clientului la fiecare factură. 2) Adaugă GROUP BY client pentru a obține totalul per client. 3) Adaugă HAVING total > 1000 pentru a filtra clienții cu total mare. 4) Adaugă COUNT(*) pentru a vedea câte facturi are fiecare client." },
-          { id: "2-1-5", day: "Zi 5", text: "Seven Databases — PostgreSQL ziua 1. Exercițiu: 1) Adaugă un index pe coloana client_id din facturi: CREATE INDEX idx_client_id ON facturi(client_id). 2) Rulează EXPLAIN ANALYZE pe un query cu și fără index. 3) Compară timpii. 4) Notează în GoodNotes când are sens să adaugi un index." },
-          { id: "2-1-6", day: "Zi 6", text: "Supabase docs — Tables și Relationships. Exercițiu: 1) Adaugă o foreign key de la facturi.client_id la clienti.id prin Supabase UI. 2) Testează că nu poți șterge un client cu facturi existente (integritate referențială). 3) Adaugă ON DELETE CASCADE și testează din nou. 4) Decide care comportament e corect pentru ECapturo." },
-          { id: "2-1-7", day: "Zi 7", text: "Supabase docs — Row Level Security. Exercițiu: 1) Activează RLS pe tabelul facturi. 2) Adaugă o policy: SELECT permis doar dacă auth.uid() = user_id. 3) Testează din Supabase UI cu un user logat. 4) Adaugă policy pentru INSERT: user_id trebuie să fie egal cu auth.uid(). 5) Testează că un user nu poate vedea facturile altui user." },
-          { id: "2-1-8", day: "Zi 8", text: "Exercițiu schema ECapturo: 1) Pe hârtie, proiectează toate tabelele: users, facturi, clienti, produse. 2) Definește toate relațiile și foreign keys. 3) Implementează schema în Supabase. 4) Adaugă RLS pe toate tabelele. 5) Inserează date de test și verifică cu queries că totul funcționează." },
-          { id: "2-1-9", day: "Zi 9", text: "Exercițiu queries avansate pe schema ta: 1) Total facturi per client per lună. 2) Clientul cu cele mai multe facturi neplătite. 3) Media sumei facturilor în ultimele 90 de zile. 4) Facturile create săptămâna asta, ordonate după sumă. 5) Scrie toate fără să cauți sintaxa — doar dacă te blochezi complet." },
-          { id: "2-1-10", day: "Zi 10 — CHECKPOINT", text: "1) Fără să deschizi docs, scrie din memorie query-ul care returnează top 5 clienți după totalul facturilor din luna curentă, cu numărul de facturi și suma totală. 2) Dacă te blochezi la sintaxa de GROUP BY sau JOIN, reia zilele 3–4. 3) Dacă reușești, ești gata pentru TypeScript." },
-        ]
-      },
-      {
-        id: "2-2",
-        week: "11–12",
-        topic: "TypeScript — tipare corecte, nu de formă",
-        books: ["Full Stack Testing — O'Reilly (cap. 1–3, pentru context tipare + testare)"],
-        online: "Total TypeScript — Matt Pocock (gratuit)",
-        onlineUrl: "https://www.totaltypescript.com/tutorials",
-        checkpoint: "TypeScript îți arată erori înainte să rulezi codul, nu după",
-        todos: [
-          { id: "2-2-1", day: "Zi 1", text: "Total TypeScript — lecțiile 1–5. Exercițiu: 1) Creează types.ts. 2) Definește tipul Factura: { id: string; client: string; suma: number; isPaid: boolean; createdAt: Date }. 3) Definește tipul Client: { id: string; nume: string; email: string }. 4) Creează un array de 3 facturi tipate. 5) Încearcă să adaugi o proprietate inexistentă — observă eroarea TS." },
-          { id: "2-2-2", day: "Zi 2", text: "Total TypeScript — lecțiile 6–10. Exercițiu: 1) Definește interface vs type pentru Factura — încearcă amândouă. 2) Extinde interfața cu FacturaPlătită care adaugă datePlată: Date. 3) Creează un union type: Status = 'draft' | 'sent' | 'paid' | 'overdue'. 4) Adaugă Status la tipul Factura. 5) Încearcă să setezi o valoare invalidă și observă eroarea." },
-          { id: "2-2-3", day: "Zi 3", text: "Total TypeScript — lecțiile 11–15 (Generics). Exercițiu: 1) Scrie un tip generic ApiResponse<T> = { data: T; error: string | null; loading: boolean }. 2) Folosește-l: ApiResponse<Factura[]> pentru lista de facturi. 3) Scrie o funcție generică fetchData<T>(url: string): Promise<ApiResponse<T>>. 4) Apeleaz-o cu tipul corect și verifică că TypeScript știe exact ce returnează." },
-          { id: "2-2-4", day: "Zi 4", text: "Total TypeScript — lecțiile 16–20 (Type narrowing + utility types). Exercițiu: 1) Folosește Partial<Factura> pentru un form de editare (nu toate câmpurile sunt obligatorii). 2) Folosește Pick<Factura, 'id' | 'client'> pentru un dropdown de selecție. 3) Folosește Omit<Factura, 'id'> pentru tipul de creare (fără id generat încă). 4) Scrie o funcție cu type guard: function isFacturăPlătită(f: Factura): f is FacturaPlătită." },
-          { id: "2-2-5", day: "Zi 5", text: "Full Stack Testing cap. 1–3. Exercițiu: 1) Citește rapid, notează în GoodNotes ce tipuri de teste există. 2) Scrie primul test cu Jest: 1) npm install jest @types/jest ts-jest. 2) Scrie un test pentru funcția totalByClient din Faza 1. 3) Rulează npm test. 4) Testul trebuie să fie verde." },
-          { id: "2-2-6", day: "Zi 6", text: "Exercițiu ECapturo — elimină 'any': 1) Deschide ECapturo. 2) Caută toate aparițiile de 'any' cu Ctrl+Shift+F. 3) Pentru fiecare, înlocuiește cu tipul corect. 4) Tipează toate răspunsurile de la Anthropic API. 5) Tipează toate răspunsurile de la Supabase. 6) Proiectul trebuie să compileze fără erori." },
-          { id: "2-2-7", day: "Zi 7", text: "Exercițiu ECapturo — tipează funcțiile: 1) Deschide fiecare fișier .ts/.tsx. 2) Adaugă tipuri explicite la fiecare parametru de funcție. 3) Adaugă tipuri explicite la fiecare return value. 4) Dacă o funcție returnează tipuri diferite, folosește union type. 5) Zero erori TypeScript la final." },
-          { id: "2-2-8", day: "Zi 8", text: "Exercițiu Zod: 1) npm install zod. 2) Definește un schema Zod pentru Factura. 3) Adaugă validare în API route POST /api/facturi: const result = FacturaSchema.safeParse(body). 4) Dacă validarea eșuează, returnează 400 cu erorile din result.error. 5) Testează cu un body invalid și verifică că primești eroare clară." },
-          { id: "2-2-9", day: "Zi 9", text: "Exercițiu generic complet: 1) Scrie tipul ApiResponse<T> dacă nu l-ai făcut. 2) Scrie o funcție createApiHandler<T>(schema: ZodSchema<T>) care: validează body-ul, returnează eroare dacă invalid, returnează datele tipate dacă valid. 3) Folosește-o în 2 API routes diferite. 4) Verifică că TypeScript inferează corect tipul T în ambele locuri." },
-          { id: "2-2-10", day: "Zi 10 — CHECKPOINT", text: "1) Rulează tsc --noEmit în terminal. 2) Trebuie să fie 0 erori. 3) Caută 'any' în tot proiectul — trebuie să fie 0. 4) Deschide un API route și explică în scris ce tip are fiecare variabilă. 5) Dacă ai erori rămase, rezolvă-le înainte să continui." },
-        ]
-      },
-      {
-        id: "2-3",
-        week: "13–16",
-        topic: "Proiect: SaaS de la 0, fără tutorial",
-        books: ["Pragmatic Thinking & Learning — Hunt (citit în paralel, 20 min/zi)"],
-        online: "Fără tutorial în săptămânile astea",
-        onlineUrl: null,
-        checkpoint: "Proiectul e live pe un domeniu real și funcționează fără bug-uri vizibile",
-        todos: [
-          { id: "2-3-1", day: "Săp. 13 Zi 1", text: "Planificare pe hârtie (nu deschizi editorul): 1) Scrie ce problemă rezolvă produsul în 1 frază. 2) Listează toate paginile: /, /login, /dashboard, etc. 3) Desenează schema DB: tabele, coloane, relații. 4) Listează toate API routes de care ai nevoie. 5) Estimează: ce poți termina în 4 săptămâni?" },
-          { id: "2-3-2", day: "Săp. 13 Zi 2", text: "Setup din memorie fără copiat: 1) npx create-next-app@latest cu TypeScript + Tailwind + App Router. 2) Creează proiect Supabase nou. 3) Adaugă variabilele de mediu în .env.local. 4) Instalează @supabase/ssr. 5) Configurează clientul Supabase pentru server și client. 6) Verifică că conexiunea funcționează cu un query simplu." },
-          { id: "2-3-3", day: "Săp. 13 Zi 3", text: "Autentificare: 1) Creează pagina /login cu form email + parolă. 2) Implementează signUp și signIn cu Supabase Auth. 3) Adaugă middleware.ts care protejează /dashboard. 4) Redirect la /dashboard după login reușit. 5) Redirect la /login dacă nu ești autentificat. 6) Testează ambele fluxuri." },
-          { id: "2-3-4", day: "Săp. 13 Zi 4", text: "Schema DB: 1) Creează toate tabelele planificate în Zi 1. 2) Adaugă foreign keys și relații. 3) Activează RLS pe toate tabelele. 4) Scrie policies pentru SELECT, INSERT, UPDATE, DELETE. 5) Testează policies din Supabase UI cu un user de test." },
-          { id: "2-3-5", day: "Săp. 13 Zi 5", text: "Primul CRUD complet: 1) Pagina care listează entitatea principală (ex: facturi). 2) Form de creare cu validare Zod. 3) API route POST care inserează în DB. 4) Buton de ștergere cu confirmare. 5) Loading states pentru fiecare operație. 6) Error handling vizibil pentru user." },
-          { id: "2-3-6", day: "Săp. 14 Zi 1", text: "Componente reutilizabile: 1) Extrage form-ul de creare într-o componentă separată. 2) Creează un component generic Table<T> care acceptă orice date. 3) Creează un Button component cu variante: primary, secondary, danger. 4) Creează un Modal component reutilizabil. 5) Refactorizează paginile să le folosească." },
-          { id: "2-3-7", day: "Săp. 14–15 Zi 2–5", text: "Construcție liberă: 1) Implementează toate paginile planificate. 2) Dacă ești blocat > 30 min, poți căuta — altfel gândești singur. 3) La final de fiecare zi, notează ce ai terminat și ce a mai rămas. 4) Nu sări peste error handling — fiecare operație trebuie să aibă un comportament clar la eroare." },
-          { id: "2-3-8", day: "Săp. 15 Zi 1", text: "Stripe: 1) Creează cont Stripe + produs cu preț lunar. 2) Instalează stripe și @stripe/stripe-js. 3) API route POST /api/checkout care creează o Checkout Session. 4) Buton 'Upgrade' în dashboard care redirectează la Stripe. 5) Webhook /api/webhook care ascultă payment.succeeded. 6) Testează cu card de test 4242 4242 4242 4242." },
-          { id: "2-3-9", day: "Săp. 15 Zi 2–5", text: "Finisare: 1) Testează manual fiecare flux de la cap la coadă. 2) Fixează orice bug găsit. 3) Adaugă loading skeleton în loc de spinner gol. 4) Verifică că toate erorile afișate sunt human-readable, nu technical. 5) Testează pe mobile — totul trebuie să fie responsive." },
-          { id: "2-3-10", day: "Săp. 16 — CHECKPOINT", text: "Deploy: 1) Push pe GitHub. 2) Deploy pe Vercel — conectează repo-ul. 3) Adaugă toate variabilele de mediu în Vercel. 4) Testează toate fluxurile în producție (nu local). 5) Trimite link-ul unui prieten și roagă-l să testeze. 6) Dacă găsește bug-uri, fixează-le înainte să treci la modul următor." },
-        ]
-      },
-      {
-        id: "2-4",
-        week: "17–20",
-        topic: "Backend deeper — webhooks, middleware, rate limiting",
-        books: ["Full Stack Testing — O'Reilly (cap. 4–8)"],
-        online: "The Odin Project — NodeJS path (selectiv)",
-        onlineUrl: "https://www.theodinproject.com/paths/full-stack-javascript",
-        checkpoint: "Înțelegi exact ce se întâmplă între browser și baza de date la fiecare request",
-        todos: [
-          { id: "2-4-1", day: "Zi 1", text: "Node.js fundamentals — context, nu framework. Exercițiu: 1) Deschide un terminal. 2) Rulează node -e \"console.log(process.env, process.platform)\". 3) Creează un fișier script.js care citește un fișier de pe disk cu fs.readFileSync. 4) Rulează cu node script.js. 5) Scopul: să înțelegi că Next.js rulează pe Node.js — nu e magie, e același runtime." },
-          { id: "2-4-2", day: "Zi 2", text: "Next.js middleware avansat. Exercițiu: 1) Deschide middleware.ts. 2) Adaugă rate limiting simplu cu un Map în memorie: dacă același IP face > 20 request-uri pe minut, returnează 429. 3) Adaugă header X-RateLimit-Remaining la fiecare răspuns. 4) Testează cu un loop care face 25 request-uri. 5) Notează: de ce un Map în memorie nu e suficient în producție (hint: multiple instances)." },
-          { id: "2-4-3", day: "Zi 3", text: "Rate limiting în producție cu Upstash. Exercițiu: 1) Creează cont gratuit pe upstash.com — Redis serverless. 2) npm install @upstash/ratelimit @upstash/redis. 3) Înlocuiește Map-ul din ziua 2 cu Ratelimit din Upstash. 4) Deployează pe Vercel. 5) Testează în producție că rate limiting funcționează. 6) Verifică în dashboard-ul Upstash că request-urile sunt înregistrate." },
-          { id: "2-4-4", day: "Zi 4", text: "Webhook Stripe complet și corect. Exercițiu: 1) Instalează Stripe CLI: brew install stripe/stripe-cli/stripe. 2) stripe login. 3) stripe listen --forward-to localhost:3000/api/webhook. 4) În handler, verifică semnătura: stripe.webhooks.constructEvent(rawBody, sig, secret). 5) Tratează checkout.session.completed (nu payment_intent — acela e pentru one-time, ăsta e pentru subscriptions). 6) La eveniment: marchează userul ca subscribed în DB. 7) Testează cu: stripe trigger checkout.session.completed." },
-          { id: "2-4-5", day: "Zi 5", text: "Server Actions în Next.js 14 — alternativa modernă la API routes. Exercițiu: 1) Citește docs Next.js despre Server Actions. 2) Convertește un API route POST simplu într-un Server Action. 3) Apelează-l direct din componentă fără fetch. 4) Adaugă revalidatePath după mutație. 5) Compară: când folosești Server Actions vs API routes? Notează răspunsul în GoodNotes." },
-          { id: "2-4-6", day: "Zi 6", text: "Testare API cu Vitest (modern, nu Jest). Exercițiu: 1) npm install vitest @vitest/ui. 2) Configurează vitest.config.ts. 3) Scrie un test pentru o funcție de validare din proiect. 4) Scrie un test pentru un Server Action sau API route handler (mock Supabase). 5) Rulează npx vitest — toate verzi. 6) Rulează npx vitest --ui pentru interfața vizuală." },
-          { id: "2-4-7", day: "Zi 7", text: "Error monitoring cu Sentry. Exercițiu: 1) Creează cont gratuit pe sentry.io. 2) npm install @sentry/nextjs. 3) Rulează npx @sentry/wizard@latest -i nextjs — configurează automat. 4) Aruncă o eroare deliberată într-o pagină. 5) Verifică că apare în dashboard-ul Sentry cu stack trace complet. 6) Adaugă un custom tag: Sentry.setTag('user_id', userId)." },
-          { id: "2-4-8", day: "Zi 8", text: "Playwright E2E. Exercițiu: 1) npm install @playwright/test. 2) npx playwright install. 3) Scrie test: deschide /, verifică că există un buton de login. 4) Scrie test: navighează la /login, completează form cu email de test, verifică redirect la /dashboard. 5) Scrie test pentru fluxul principal al aplicației. 6) Rulează npx playwright test --headed să vezi browserul în acțiune." },
-          { id: "2-4-9", day: "Zi 9", text: "Documentare flux complet. Exercițiu: 1) Alege cel mai complex flux din aplicație (ex: upload factură → AI extracție → salvare DB). 2) Desenează pe hârtie fiecare pas cu săgeți. 3) Pentru fiecare pas notează: ce date intră, ce date ies, ce se întâmplă la eroare. 4) Verifică că fiecare punct de eșec are error handling implementat. 5) Dacă găsești un punct fără error handling, implementează-l." },
-          { id: "2-4-10", day: "Zi 10 — CHECKPOINT", text: "1) Deschide DevTools → Network tab. 2) Fă operația principală din aplicație. 3) Explică fiecare request: de ce s-a făcut, ce headers are, ce payload, ce response. 4) Pune un console.log în middleware și în API route și urmărește ordinea execuției. 5) Dacă nu poți explica orice pas, reia ziua 9." },
-        ]
-      }
-    ]
+    week: 2, phase: 1, phaseTitle: "JavaScript Solid", color: "#F5C518",
+    topic: "JS Fundamentals — recapitulare & exerciții",
+    resource: "javascript.info — exerciții + JS Definitive Guide cap. 3–4",
+    resourceUrl: "https://javascript.info",
+    days: [
+      { day: 1, title: "Type coercion", read: "JS Definitive Guide cap. 3", task: "Testează: '5' + 3, '5' - 3, !!0, !!''. Explică în scris de ce JS face asta și scrie 3 exemple de bug-uri cauzate de type coercion." },
+      { day: 2, title: "Exercițiu complet", read: "Fără lectură — cod pur", task: "Creează un array de 5 facturi cu {id, client, suma, luna}. Scrie filterByMonth(arr, luna), totalByClient(arr, client) și topClients(arr). Testează toate cu console.log." },
+      { day: 3, title: "Review cod real", read: "Proiectele tale", task: "Deschide un fișier .tsx din ECapturo sau Invoysr. Citește-l complet. Scrie pe hârtie ce face fiecare bloc. Notează orice linie pe care nu o înțelegi 100%." },
+      { day: 4, title: "Repetare puncte slabe", read: "Zilele unde ai notat lacune", task: "Reia exact capitolele pentru liniile pe care nu le-ai înțeles în Zi 3. Nu trece mai departe dacă ai mai mult de 2 lucruri neclare." },
+      { day: 5, title: "Exerciții javascript.info", read: "javascript.info — toate exercițiile cap. 2–5", task: "Fă toate exercițiile marcate cu ★★ sau mai mult de pe javascript.info la capitolele parcurse. Notează câte ai greșit și de ce." },
+      { day: 6, title: "Mini-proiect", read: "Fără lectură", task: "Scrie un script care: citește un array de facturi hardcodat, calculează totalul pe lună, afișează top 3 clienți, marchează facturile > 30 zile ca overdue. Totul într-un singur fișier JS." },
+      { day: 7, title: "CHECKPOINT", read: "—", task: "CHECKPOINT: Deschide un fișier .tsx din proiect. Înțelegi fiecare linie? Dacă nu, identifică exact ce lipsește și notează pentru săptămâna viitoare." },
+    ],
+    checkpoint: "Înțelegi 100% orice fișier JS/TS din proiectele tale existente."
   },
   {
-    id: 3,
-    title: "AI Foundations",
-    subtitle: "De la utilizator la inginer AI",
-    weeks: "21–32",
-    color: "#7B61FF",
-    textColor: "#fff",
-    goal: "Înțelegi cum funcționează LLM-urile și construiești aplicații AI serioase",
-    modules: [
-      {
-        id: "3-1",
-        week: "21–22",
-        topic: "Cum funcționează LLM-urile — conceptual",
-        books: ["Algorithmic Thinking (primele 3 capitole — pentru context algoritmic)"],
-        online: "3Blue1Brown Neural Networks (YouTube) + Andrej Karpathy — Intro to LLMs",
-        onlineUrl: "https://www.youtube.com/watch?v=zjkBMFhNj_g",
-        checkpoint: "Poți explica tokenization, attention și hallucinations unui coleg fără background tehnic",
-        todos: [
-          { id: "3-1-1", day: "Zi 1", text: "3Blue1Brown — ep. 1: What is a neural network? Exercițiu după vizionare: 1) Deschide GoodNotes. 2) Desenează o rețea neurală cu 3 layere din memorie. 3) Etichetează: input layer, hidden layers, output layer, weights, activations. 4) Explică în scris: de ce avem nevoie de multiple layere?" },
-          { id: "3-1-2", day: "Zi 2", text: "3Blue1Brown — ep. 2: Gradient descent. Exercițiu: 1) Vizionează. 2) În GoodNotes, desenează o curbă de loss function. 3) Marchează: local minimum, global minimum, learning rate prea mare, learning rate potrivit. 4) Explică în scris cu cuvintele tale ce face gradient descent — fără să copiezi definiția." },
-          { id: "3-1-3", day: "Zi 3", text: "3Blue1Brown — ep. 3: Backpropagation. Exercițiu: 1) Vizionează de 2 ori dacă e necesar. 2) Scrie în GoodNotes: ce calculează backpropagation și de ce e necesar. 3) Desenează direcția de propagare: forward pass (stânga→dreapta), backward pass (dreapta→stânga). 4) Notează legătura cu chain rule din matematică." },
-          { id: "3-1-4", day: "Zi 4", text: "3Blue1Brown — ep. 5–6: Attention + Transformers. Exercițiu: 1) Vizionează ambele. 2) Desenează mecanismul de attention: Query, Key, Value. 3) Explică în scris: de ce attention e mai bun decât RNN pentru text lung. 4) Notează: ce înseamnă 'context window' și de ce are o limită." },
-          { id: "3-1-5", day: "Zi 5", text: "Andrej Karpathy — Intro to LLMs (1h). Exercițiu: 1) Vizionează cu notițe active. 2) Scrie: ce e pretraining vs fine-tuning vs RLHF. 3) Scrie: de ce LLM-urile pot părea că 'știu' lucruri. 4) Scrie: 3 limitări fundamentale ale LLM-urilor actuale. 5) Notează: ce face un AI Engineer diferit față de un utilizator normal?" },
-          { id: "3-1-6", day: "Zi 6", text: "Tokenization. Exercițiu: 1) Deschide platform.openai.com/tokenizer (funcționează pentru orice LLM). 2) Testează: 'hello' → câte tokene? 'București' → câte tokene? Un emoji → câte tokene? 3) Observă că tokenizarea nu e pe cuvinte. 4) Testează un text în română vs engleză — observă diferența. 5) Explică în scris de ce tokenizarea contează pentru cost și context window." },
-          { id: "3-1-7", day: "Zi 7", text: "Hallucinations. Exercițiu: 1) Citește Anthropic blog: 'Core Views on AI Safety'. 2) Întreabă Claude ceva despre care știi că nu are informații corecte. 3) Observă cum răspunde. 4) Scrie în GoodNotes: 3 cauze ale hallucinations și 3 tehnici de mitigare. 5) Leagă cu ce ai învățat despre training — de ce e structural imposibil să elimini complet hallucinations." },
-          { id: "3-1-8", day: "Zi 8", text: "Algorithmic Thinking cap. 1–3. Exercițiu: 1) Citește rapid. 2) Pentru fiecare algoritm prezentat, scrie: complexitatea O(n). 3) Identifică care algoritmi apar în ML (hint: k-nearest neighbors). 4) Notează: ce înseamnă O(n²) pentru un dataset de 1 milion de rânduri — de ce contează?" },
-          { id: "3-1-9", day: "Zi 9", text: "Sinteză. Exercițiu: 1) Deschide o pagină nouă în GoodNotes. 2) Fără să te uiți la notițe, scrie fluxul complet al unui LLM: de la text input → tokenizare → embedding → attention layers → output → detokenizare → text output. 3) Adaugă: unde apar hallucinations în acest flux. 4) Compară cu notițele tale — ce ai uitat?" },
-          { id: "3-1-10", day: "Zi 10 — CHECKPOINT", text: "1) Explică unui prieten (sau înregistrează-te) ce e un transformer — fără jargon tehnic, maxim 2 minute. 2) Explică de ce LLM-urile halucinează — structural, nu superficial. 3) Explică ce e tokenizarea și de ce contează. 4) Dacă te blochezi la oricare, reia ziua corespunzătoare. Nu trece mai departe." },
-        ]
-      },
-      {
-        id: "3-2",
-        week: "23–24",
-        topic: "Anthropic API — în profunzime",
-        books: [],
-        online: "docs.anthropic.com — complet",
-        onlineUrl: "https://docs.anthropic.com",
-        checkpoint: "Știi diferența dintre prompt caching, tool use și extended thinking și când folosești fiecare",
-        todos: [
-          { id: "3-2-1", day: "Zi 1", text: "docs.anthropic.com — Messages API. Exercițiu: 1) Creează un fișier test-api.ts. 2) Instalează @anthropic-ai/sdk. 3) Scrie un call simplu: trimite 'Hello' și loghează răspunsul. 4) Adaugă un system prompt: 'Ești un asistent pentru facturi'. 5) Schimbă modelul la claude-sonnet-4-20250514. 6) Loghează: input tokens, output tokens, cost estimat." },
-          { id: "3-2-2", day: "Zi 2", text: "Streaming. Exercițiu: 1) Citește docs despre streaming. 2) Creează API route /api/chat/stream. 3) Folosește stream: true în API call. 4) Returnează un ReadableStream către client. 5) În frontend, consumă stream-ul și afișează textul caracter cu caracter. 6) Testează: trebuie să apară progresiv, nu tot dintr-o dată." },
-          { id: "3-2-3", day: "Zi 3", text: "System prompts. Exercițiu: 1) Scrie 5 system prompts diferite pentru același task (extracție facturi). 2) Testează fiecare cu aceleași 3 facturi. 3) Notează: care e mai precis? Care e mai rapid? Care halucinează mai puțin? 4) Documentează în GoodNotes ce tehnici de prompting au funcționat și de ce." },
-          { id: "3-2-4", day: "Zi 4", text: "Tool use. Exercițiu: 1) Citește docs despre tool use complet. 2) Definește un tool getFactura(id: string) care caută în Supabase. 3) Trimite un mesaj: 'Arată-mi factura #123'. 4) Claude trebuie să apeleze tool-ul automat. 5) Returnează rezultatul tool-ului și lasă Claude să formuleze răspunsul. 6) Testează cu un id inexistent — ce face Claude?" },
-          { id: "3-2-5", day: "Zi 5", text: "Prompt caching. Exercițiu: 1) Citește docs despre caching. 2) Ai un system prompt lung (500+ cuvinte). 3) Adaugă cache_control: { type: 'ephemeral' } pe system prompt. 4) Fă 5 request-uri consecutive. 5) Compară: cache_creation_input_tokens vs cache_read_input_tokens în răspunsuri. 6) Calculează diferența de cost cu și fără cache." },
-          { id: "3-2-6", day: "Zi 6", text: "Vision API — direct pentru ECapturo. Exercițiu: 1) Găsește o factură reală (poți fotografia una). 2) Convertește la base64 în Node.js: fs.readFileSync(path).toString('base64'). 3) Trimite imaginea la Claude cu un prompt: 'Extrage: număr factură, dată, furnizor, total, TVA'. 4) Loghează răspunsul. 5) Încearcă să obții răspuns JSON structurat adăugând instrucțiuni în prompt." },
-          { id: "3-2-7", day: "Zi 7", text: "Extended thinking. Exercițiu: 1) Citește docs despre extended thinking. 2) Pune o problemă complexă: 'Analizează aceste 5 facturi și identifică anomalii'. 3) Rulează cu și fără thinking: { type: 'enabled', budget_tokens: 5000 }. 4) Compară răspunsurile — e diferența vizibilă? 5) Notează: pentru ce tipuri de probleme merită costul suplimentar?" },
-          { id: "3-2-8", day: "Zi 8", text: "Chatbot cu memorie. Exercițiu fără tutorial: 1) Creează o pagină /chat. 2) Menții conversationHistory ca array de { role, content }. 3) La fiecare mesaj nou, adaugi la history și trimiți tot history-ul la API. 4) Streaming activat. 5) Buton 'Clear conversation' care resetează history. 6) Testează că Claude își amintește ce i-ai spus anterior." },
-          { id: "3-2-9", day: "Zi 9", text: "Testează limitele. Exercițiu: 1) Trimite un mesaj cu context window aproape plin (100k+ tokens) — ce se întâmplă? 2) Trimite un prompt ambiguu deliberat — cum răspunde? 3) Fă tool use să eșueze (returnează eroare din tool) — cum gestionează Claude eroarea? 4) Testează cu input malformat. 5) Documentează: ce edge cases trebuie să gestionezi în ECapturo?" },
-          { id: "3-2-10", day: "Zi 10 — CHECKPOINT", text: "1) Implementează într-un singur API route: tool use + streaming + prompt caching. 2) Tool-ul caută date reale în Supabase. 3) Răspunsul vine în streaming. 4) System prompt-ul e cached. 5) Dacă nu funcționează, debug pas cu pas: mai întâi fără streaming, adaugă streaming, adaugă caching. Nu trece mai departe dacă oricare din trei nu merge." },
-        ]
-      },
-      {
-        id: "3-3",
-        week: "25–28",
-        topic: "Prompt Engineering & Evals",
-        books: [],
-        online: "Anthropic Prompt Engineering docs + DeepLearning.AI — Evaluating LLM Outputs (gratuit)",
-        onlineUrl: "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview",
-        checkpoint: "Ai un eval framework funcțional pe un proiect real",
-        todos: [
-          { id: "3-3-1", day: "Zi 1", text: "Anthropic Prompt Engineering docs — citește complet. Exercițiu: 1) Deschide GoodNotes. 2) Notează toate tehnicile menționate cu câte un exemplu pentru fiecare. 3) Marchează: care tehnici sunt relevante pentru ECapturo? 4) Scrie: ce face un prompt bun vs un prompt prost pentru extracție de date structurate?" },
-          { id: "3-3-2", day: "Zi 2", text: "Chain of Thought. Exercițiu: 1) Ia un prompt de extracție factură fără CoT. 2) Testează pe 5 facturi — notează acuratețea. 3) Adaugă la prompt: 'Gândește pas cu pas înainte să răspunzi'. 4) Testează pe aceleași 5 facturi. 5) Compară rezultatele. 6) Notează: pentru ce tipuri de câmpuri ajută CoT cel mai mult?" },
-          { id: "3-3-3", day: "Zi 3", text: "Few-shot prompting. Exercițiu: 1) Alege 3 facturi reale cu extracții corecte. 2) Construiește un prompt cu format: 'Exemplu 1: [factură] → [extracție JSON]. Exemplu 2: ... Acum extrage din: [factură nouă]'. 3) Testează pe 5 facturi noi. 4) Compară acuratețea vs zero-shot. 5) Găsește exemplele care ajută cel mai mult." },
-          { id: "3-3-4", day: "Zi 4", text: "DeepLearning.AI — Evaluating LLM Outputs, lecțiile 1–3. Exercițiu: 1) Completează lecțiile. 2) Notează: ce tipuri de metrici există (exact match, fuzzy match, LLM-as-judge). 3) Scrie: pentru ECapturo, ce metrică e cea mai relevantă pentru fiecare câmp (număr factură, dată, total, TVA)?" },
-          { id: "3-3-5", day: "Zi 5", text: "DeepLearning.AI — lecțiile 4–6. Exercițiu: 1) Completează lecțiile. 2) Scrie un evaluator simplu în TypeScript: function evalExtraction(expected: Factura, actual: Factura): number — returnează scor 0-1. 3) Testează pe 3 perechi expected/actual. 4) Verifică că scorul e 1.0 când sunt identice și 0.0 când sunt complet diferite." },
-          { id: "3-3-6", day: "Zi 6", text: "Construiește eval dataset. Exercițiu: 1) Colectează 20 de facturi reale sau generate. 2) Extrage manual câmpurile pentru fiecare: aceasta e 'ground truth'. 3) Salvează în eval-dataset.json: [{ input: 'imagine/text factură', expected: { numar, data, total, tva } }]. 4) Rulează promptul actual pe toate 20. 5) Calculează acuratețea per câmp." },
-          { id: "3-3-7", day: "Zi 7", text: "Îmbunătățire iterativă. Exercițiu: 1) Uită-te la facturile unde extracția a greșit. 2) Identifică pattern-ul: ce tip de factură e problematic? 3) Modifică promptul să gestioneze acel caz. 4) Rulează din nou eval-ul complet. 5) Compară scorul: a crescut? 6) Repetă o dată — 2 iterații minime." },
-          { id: "3-3-8", day: "Zi 8", text: "Reducing hallucinations. Exercițiu: 1) Citește docs Anthropic despre reducerea hallucinations. 2) Adaugă în promptul tău: 'Dacă un câmp nu e vizibil în factură, returnează null — nu inventa date'. 3) Testează cu o factură unde lipsește TVA-ul. 4) Verifică că returnează null și nu inventează. 5) Testează cu o factură în altă limbă." },
-          { id: "3-3-9", day: "Zi 9", text: "Documentează eval framework-ul. Exercițiu: 1) Scrie un script run-evals.ts care: citește eval-dataset.json, rulează promptul pe fiecare, compară cu expected, printează raport. 2) Raportul trebuie să arate: acuratețe per câmp, acuratețe totală, cazurile unde a greșit. 3) Rulează-l și salvează rezultatele. 4) Adaugă în README al proiectului." },
-          { id: "3-3-10", day: "Zi 10 — CHECKPOINT", text: "1) Rulează eval-ul complet. 2) Acuratețea trebuie să fie > 80% pe câmpurile principale. 3) Dacă e sub 80%, mai fă o iterație de îmbunătățire a promptului. 4) Demonstrează ciclul complet: modifici promptul → rulezi eval → scorul crește. 5) Dacă nu ai ajuns la ciclul ăsta funcțional, reia zilele 6–7." },
-        ]
-      },
-      {
-        id: "3-4",
-        week: "29–32",
-        topic: "RAG, Embeddings & AI Agents",
-        books: [],
-        online: "DeepLearning.AI — RAG + Agents short courses (gratuite)",
-        onlineUrl: "https://www.deeplearning.ai/short-courses/",
-        checkpoint: "Ai un feature cu RAG live într-un proiect real pe care îl demonstrezi la interviu",
-        todos: [
-          { id: "3-4-1", day: "Zi 1", text: "DeepLearning.AI — RAG course, lecțiile 1–3. Exercițiu: 1) Completează lecțiile. 2) În GoodNotes, desenează arhitectura RAG: document → chunks → embeddings → vector DB → query → retrieval → context → LLM → răspuns. 3) Notează: de ce e RAG mai bun decât a pune tot documentul în context?" },
-          { id: "3-4-2", day: "Zi 2", text: "Embeddings în Supabase. Exercițiu: 1) Activează extensia pgvector în Supabase: CREATE EXTENSION vector. 2) Creează tabel: documents(id, content TEXT, embedding vector(1024), metadata JSONB). 3) Notă: folosim 1024 dimensiuni pentru Voyage AI (recomandat cu Anthropic) sau 1536 pentru OpenAI text-embedding-3-small. 4) Instalează @anthropic-ai/sdk sau voyage-ai-client. 5) Generează un embedding pentru un text scurt. 6) Inserează în tabel și verifică că s-a salvat." },
-          { id: "3-4-3", day: "Zi 3", text: "Pipeline de indexare. Exercițiu: 1) Scrie funcția chunkText(text, chunkSize, overlap) care împarte textul în bucăți cu overlap. 2) Testează cu un document de 1000 cuvinte și chunkSize=200, overlap=50. 3) Verifică că nu tai cuvinte la mijloc. 4) Generează embeddings pentru fiecare chunk. 5) Inserează toate în Supabase." },
-          { id: "3-4-4", day: "Zi 4", text: "Search semantic. Exercițiu: 1) Scrie funcția searchDocuments(query: string): Promise<Chunk[]>. 2) Generează embedding pentru query. 3) Caută în Supabase cu cosine similarity: ORDER BY embedding <=> queryEmbedding LIMIT 5. 4) Testează: caută 'total de plată' și verifică că găsește chunks despre sume. 5) Compară cu un search clasic cu ILIKE — ce e mai precis?" },
-          { id: "3-4-5", day: "Zi 5", text: "DeepLearning.AI — Agents course, lecțiile 1–3. Exercițiu: 1) Completează lecțiile. 2) Desenează diferența: chatbot simplu (input → LLM → output) vs agent (input → LLM → tool decision → tool execution → LLM → output). 3) Notează: când are sens să folosești un agent vs un simplu API call?" },
-          { id: "3-4-6", day: "Zi 6", text: "DeepLearning.AI — Agents course, lecțiile 4–6. Exercițiu: 1) Completează. 2) Definește 3 tools pentru un agent de facturi: searchFacturi, getClient, calculateTotal. 3) Scrie schema pentru fiecare tool (name, description, input_schema). 4) Trimite un mesaj și lasă Claude să decidă ce tool să apeleze. 5) Implementează execuția tool-ului și returnarea rezultatului." },
-          { id: "3-4-7", day: "Zi 7", text: "Agent complet. Exercițiu: 1) Construiește un agent care răspunde la întrebări despre facturi: 'Care e totalul facturilor din luna trecută?' 2) Agentul trebuie să: înțeleagă întrebarea → apeleze tool-ul potrivit → primească date din DB → formuleze răspuns natural. 3) Testează cu 5 întrebări diferite. 4) Notează unde agentul eșuează și de ce." },
-          { id: "3-4-8", day: "Zi 8", text: "RAG în ECapturo. Exercițiu: 1) Adaugă o pagină /chat în ECapturo. 2) La upload factură: extrage textul, împarte în chunks, generează embeddings, stochează în Supabase. 3) La întrebare: caută chunks relevante, adaugă ca context în prompt, generează răspuns. 4) Testează: 'Care e numărul facturii uploadate?' — trebuie să găsească răspunsul corect." },
-          { id: "3-4-9", day: "Zi 9", text: "Optimizare RAG. Exercițiu: 1) Testează cu chunk sizes diferite: 100, 200, 500 cuvinte. 2) Notează care dă răspunsuri mai bune. 3) Testează cu overlap diferit: 0, 50, 100 cuvinte. 4) Testează cu număr diferit de chunks returnate: 3, 5, 10. 5) Scrie în GoodNotes configurația optimă găsită și de ce funcționează mai bine." },
-          { id: "3-4-10", day: "Zi 10 — CHECKPOINT", text: "1) Feature-ul RAG e live în ECapturo în producție. 2) Testează: uploadezi o factură → pui o întrebare despre ea → primești răspuns corect. 3) Dacă nu merge în producție, debuguiești până merge. 4) Înregistrează un demo de 2 minute. 5) Poți explica la interviu: ce e RAG, cum l-ai implementat, ce probleme ai întâmpinat." },
-        ]
-      }
-    ]
+    week: 3, phase: 1, phaseTitle: "JavaScript Solid", color: "#F5C518",
+    topic: "Closures, scope, this",
+    resource: "javascript.info — Cap. 6.1–6.6",
+    resourceUrl: "https://javascript.info/closure",
+    days: [
+      { day: 1, title: "Closures", read: "javascript.info 6.1–6.3", task: "Scrie makeCounter() care returnează o funcție. La fiecare apel contorul crește. Creează 2 contoare independente. Explică în scris de ce funcționează — asta e closure." },
+      { day: 2, title: "this & binding", read: "javascript.info 6.4–6.6", task: "Creează un obiect timer cu metoda start(). Pune-o în setTimeout și observă că this e undefined. Repară cu arrow function. Repară alternativ cu .bind(this). Explică diferența." },
+      { day: 3, title: "Decorators", read: "javascript.info 6.7–6.9", task: "Scrie delay(fn, ms) care returnează o versiune întârziată a funcției fn. Testează: const delayedLog = delay(console.log, 1000). Apelează și verifică că apare după 1 secundă." },
+      { day: 4, title: "Memoization", read: "JS Definitive Guide cap. 8 — selectiv", task: "Scrie memoize(fn) care cachează rezultatele apelurilor anterioare. Al doilea apel cu aceiași parametri trebuie să fie instant. Identifică closure-ul și higher-order function în codul tău." },
+      { day: 5, title: "Exercițiu integrat", read: "Proiectele tale", task: "Deschide ECapturo. Găsește cel mai complex bloc de cod. Desenează pe hârtie ce se apelează și în ce ordine. Identifică toate closure-urile din acel bloc." },
+      { day: 6, title: "Repetare", read: "Ziua unde ai greșit cel mai mult", task: "Reia exercițiul cu care te-ai blocat cel mai mult în această săptămână. Scrie-l din memorie fără să te uiți la soluție." },
+      { day: 7, title: "CHECKPOINT", read: "—", task: "CHECKPOINT: Explică în scris ce e un closure fără să copiezi definiția. Dacă nu poți în 5 minute, reia ziua 1." },
+    ],
+    checkpoint: "Explici closures și this unui coleg fără să te uiți la notițe."
   },
   {
-    id: 4,
-    title: "AI Engineer Ready",
-    subtitle: "Portofoliu solid + interviu pregătit",
-    weeks: "33–52",
-    color: "#FF4D6D",
-    textColor: "#fff",
-    goal: "Portofoliu demonstrabil, CV actualizat, pregătit pentru interviuri AI engineer",
-    modules: [
-      {
-        id: "4-1",
-        week: "33–36",
-        topic: "Python pentru AI — rapid și targeted",
-        books: ["Automate the Boring Stuff with Python — cap. 1–11", "The Big Book of Small Python Projects — 10 proiecte selectate"],
-        online: "fast.ai — Lesson 1–3",
-        onlineUrl: "https://course.fast.ai",
-        checkpoint: "Scrii un script Python care procesează CSV, apelează Anthropic API și salvează rezultatele",
-        todos: [
-          { id: "4-1-1", day: "Zi 1", text: "Automate the Boring Stuff — cap. 1–2. Exercițiu: 1) Instalează Python 3.12+. 2) Deschide REPL (python3 în terminal). 3) Testează: variabile, string-uri, numere, print(). 4) Scrie primul script hello.py care printează 'Hello from Python'. 5) Rulează cu python3 hello.py. 6) Dacă știi deja Python basic, sari la cap. 7." },
-          { id: "4-1-2", day: "Zi 2", text: "Automate — cap. 3–4. Exercițiu: 1) Scrie o funcție calculate_vat(total, rate=0.19) care returnează TVA-ul. 2) Scrie o funcție process_invoices(invoices: list) care calculează totalul și TVA-ul pentru fiecare. 3) Testează cu o listă de 5 dicționare {client, suma}. 4) Adaugă type hints la funcții." },
-          { id: "4-1-3", day: "Zi 3", text: "Automate — cap. 5–6. Exercițiu: 1) Creează un dicționar de facturi {id: {client, suma, data}}. 2) Adaugă funcții: get_by_client(invoices, client), get_overdue(invoices, days=30). 3) Testează fiecare. 4) Scrie o funcție care formatează o factură ca string human-readable." },
-          { id: "4-1-4", day: "Zi 4", text: "Automate — cap. 7–8. Exercițiu: 1) Creează facturi.csv cu 10 rânduri: id,client,suma,data,platit. 2) Citește cu csv.DictReader. 3) Filtrează facturile neplătite. 4) Calculează totalul neplătit. 5) Scrie rezultatele într-un nou CSV: raport.csv. 6) Verifică că fișierul e corect formatat." },
-          { id: "4-1-5", day: "Zi 5", text: "Automate — cap. 9–11. Exercițiu: 1) Scrie un script care: citește un folder cu PDF-uri de facturi (poți simula cu fișiere .txt). 2) Pentru fiecare fișier, extrage textul. 3) Printează primele 200 de caractere din fiecare. 4) Salvează toate textele extrase într-un singur fișier all_invoices.txt." },
-          { id: "4-1-6", day: "Zi 6", text: "fast.ai — Lesson 1. Exercițiu: 1) Deschide Kaggle → New Notebook. 2) Copiază codul din lecție. 3) Rulează pas cu pas — nu copia și run all. 4) La fiecare celulă, scrie în comentariu ce face. 5) Antrenează modelul pe dataset-ul din lecție. 6) Testează cu o imagine proprie." },
-          { id: "4-1-7", day: "Zi 7", text: "fast.ai — Lessons 2–3. Exercițiu: 1) Completează lecțiile în Kaggle. 2) Modifică modelul să clasifice alt tip de imagini (ex: tipuri de documente). 3) Antrenează pe cel puțin 2 epoci. 4) Notează: ce e accuracy, ce e loss, de ce diferă pe training vs validation?" },
-          { id: "4-1-8", day: "Zi 8", text: "Big Book of Small Python Projects — alege 5 proiecte. Exercițiu: 1) Alege proiecte relevante: File Organizer, Password Generator, Text Statistics, etc. 2) Implementează fiecare complet, nu doar copiezi. 3) Pentru fiecare, adaugă o modificare proprie. 4) Scopul: să te simți confortabil cu Python pentru scripturi reale." },
-          { id: "4-1-9", day: "Zi 9", text: "Anthropic API din Python. Exercițiu: 1) pip install anthropic. 2) Scrie extract_invoice.py care: citește o imagine de factură (sau text), apelează Claude claude-sonnet-4-20250514, parsează răspunsul JSON. 3) Testează cu 3 facturi diferite. 4) Salvează rezultatele în invoices_extracted.json. 5) Compară cu implementarea TypeScript — ce e diferit?" },
-          { id: "4-1-10", day: "Zi 10 — CHECKPOINT", text: "1) Scrie din memorie un script Python complet: citește invoices.csv, apelează Claude pentru fiecare rând cu textul facturii, parsează răspunsul, salvează în results.json. 2) Rulează — trebuie să funcționeze fără erori. 3) Dacă te blochezi la sintaxa Python, reia zilele 1–3. Dacă te blochezi la API call, reia ziua 9." },
-        ]
-      },
-      {
-        id: "4-2",
-        week: "37–40",
-        topic: "ML Fundamentals — suficient pentru interviu",
-        books: ["Grokking Algorithms (complet — e scurt și vizual)", "Algorithmic Thinking (cap. 4–6)"],
-        online: "fast.ai — Lessons 4–5 + Anthropic fine-tuning docs",
-        onlineUrl: "https://course.fast.ai",
-        checkpoint: "Poți explica overfitting, training/validation split și learning rate la interviu",
-        todos: [
-          { id: "4-2-1", day: "Zi 1", text: "Grokking Algorithms — cap. 1–3. Exercițiu: 1) Citește cap. 1 (Binary search). 2) Implementează binary_search(arr, target) în Python fără să te uiți la carte. 3) Testează cu un array de 1000 elemente. 4) Calculează: câte pași face binary search vs linear search pentru 1000 elemente? 5) Notează: ce înseamnă O(log n) în practică?" },
-          { id: "4-2-2", day: "Zi 2", text: "Grokking Algorithms — cap. 4–6. Exercițiu: 1) Implementează quicksort în Python. 2) Testează pe un array de 10 elemente. 3) Creează un dict și testează că lookup e O(1). 4) Implementează BFS pe un graf simplu (5 noduri). 5) Notează: unde apar hash tables în codul tău JS/TS? (hint: objects, Maps)" },
-          { id: "4-2-3", day: "Zi 3", text: "Grokking Algorithms — cap. 7–10. Exercițiu: 1) Citește cap. 10 — K-nearest neighbors. 2) Acesta e baza pentru recommendation systems și clasificare. 3) Implementează knn_classify simplu cu distanță Euclidiană. 4) Testează: clasifcă un punct nou față de 5 puncte existente. 5) Notează legătura cu embeddings și cosine similarity din RAG." },
-          { id: "4-2-4", day: "Zi 4", text: "fast.ai — Lesson 4: NLP. Exercițiu: 1) Deschide Kaggle notebook. 2) Urmează lecția pas cu pas. 3) Antrenează un model de clasificare text. 4) Testează cu un text scurt propriu. 5) Notează: ce e tokenizarea în contextul ML vs tokenizarea în LLMs — sunt diferite?" },
-          { id: "4-2-5", day: "Zi 5", text: "fast.ai — Lesson 5: Training loop. Exercițiu: 1) Urmează lecția. 2) Scrie din memorie structura unui training loop: for epoch in range(n_epochs): for batch in dataloader: pred = model(batch), loss = criterion(pred, labels), optimizer.zero_grad(), loss.backward(), optimizer.step(). 3) Explică ce face fiecare linie." },
-          { id: "4-2-6", day: "Zi 6", text: "Fine-tuning vs prompting — decizia corectă. Exercițiu: 1) Citește Anthropic docs despre fine-tuning (docs.anthropic.com/en/docs/build-with-claude/fine-tuning). 2) Notează în GoodNotes: 3 scenarii unde fine-tuning bate prompting și 3 unde prompting e suficient. 3) Pentru ECapturo: ai nevoie de fine-tuning? Argumentează în scris. 4) Calculează estimativ costul de fine-tuning vs prompt engineering pentru 10.000 facturi/lună." },
-          { id: "4-2-7", day: "Zi 7", text: "Algorithmic Thinking cap. 4–6. Exercițiu: 1) Citește cap. 4–6. 2) Implementează un algoritm din carte în Python. 3) Notează complexitatea lui O(?) 4) Identifică dacă există un algoritm echivalent în NumPy sau scikit-learn. 5) Compară viteza: implementarea ta vs biblioteca." },
-          { id: "4-2-8", day: "Zi 8", text: "Fine-tuning pe Kaggle. Exercițiu: 1) Găsește un dataset de clasificare text pe Kaggle (ex: sentiment analysis). 2) Fine-tunează un model mic (distilbert sau similar) — fast.ai face asta simplu. 3) Antrenează 3 epoci. 4) Evaluează pe validation set. 5) Notează: accuracy, loss, câte minute a durat." },
-          { id: "4-2-9", day: "Zi 9", text: "Documentare proces ML. Exercițiu: 1) Deschide GoodNotes. 2) Scrie un 'ML experiment log' pentru fine-tuning-ul de ieri: dataset folosit, arhitectura modelului, hyperparameters (learning rate, batch size, epochs), metrici finale, ce ai fi făcut diferit. 3) Ăsta e formatul pe care trebuie să îl descrii la un interviu." },
-          { id: "4-2-10", day: "Zi 10 — CHECKPOINT", text: "1) Fără să cauți, explică: overfitting (ce e, cum îl detectezi, cum îl rezolvi), learning rate (ce e prea mare, ce e prea mic), training vs validation split (de ce e necesar). 2) Dacă te blochezi la oricare, reia lecțiile fast.ai corespunzătoare. 3) Scrie explicațiile în GoodNotes — le vei folosi la interviu." },
-        ]
-      },
-      {
-        id: "4-3",
-        week: "41–44",
-        topic: "Proiect flagship pentru portofoliu",
-        books: ["How Cybersecurity Really Works (citit în paralel — context pentru securitate în AI apps)"],
-        online: "Fără tutorial",
-        onlineUrl: null,
-        checkpoint: "Proiectul e live, documentat pe GitHub și îl prezinți în 10 minute la un interviu",
-        todos: [
-          { id: "4-3-1", day: "Săp. 41 Zi 1", text: "Decizie și specificații. Exercițiu: 1) Decide: ECapturo complet SAU un tool AI nou. 2) Scrie un document de 1 pagină: problema pe care o rezolvă, cine o folosește, ce face produsul (3 features principale). 3) Listează ce tehnologii folosești și de ce. 4) Definește cum arată 'done': ce trebuie să funcționeze pentru a considera proiectul terminat?" },
-          { id: "4-3-2", day: "Săp. 41 Zi 2", text: "Arhitectură pe hârtie. Exercițiu: 1) Desenează toate paginile și navigarea dintre ele. 2) Desenează schema DB cu toate tabelele și relațiile. 3) Listează toate API routes cu method, path, ce primesc, ce returnează. 4) Desenează fluxul AI: input → procesare → output. 5) Identifică: ce e cel mai riscant tehnic? Rezolvă aia primul." },
-          { id: "4-3-3", day: "Săp. 41 Zi 3–5", text: "Core AI feature. Exercițiu: 1) Implementează feature-ul AI principal (vision + extracție, RAG, sau agent). 2) Nu lucra la UI încă — concentrează-te pe logica AI să funcționeze. 3) Scrie teste manuale: testezi cu 5 inputs diferite și verifici că output-ul e corect. 4) Dacă e blocat > 1 zi, simplifică scope-ul." },
-          { id: "4-3-4", day: "Săp. 42", text: "UI și integrare. Exercițiu: 1) Zi 1: Auth + layout de bază. 2) Zi 2–3: Pagina principală cu feature-ul AI integrat. 3) Zi 4: Loading states, error states, empty states — toate trebuie să aibă UI. 4) Zi 5: Testează fiecare flux complet de la început până la sfârșit. Fixează ce nu merge." },
-          { id: "4-3-5", day: "Săp. 43 Zi 1–3", text: "Eval framework. Exercițiu: 1) Creează eval-dataset.json cu 20 de exemple pentru feature-ul AI. 2) Scrie run-evals.ts care rulează toate exemplele și calculează scorul. 3) Rulează eval-ul — notează scorul inițial. 4) Îmbunătățește promptul dacă scorul e sub 75%. 5) Rulează din nou. 6) Adaugă un script npm run eval." },
-          { id: "4-3-6", day: "Săp. 43 Zi 4–5", text: "Deploy. Exercițiu: 1) Push pe GitHub — repo public. 2) Deploy pe Vercel. 3) Configurează toate env variables. 4) Testează TOATE fluxurile în producție — nu local. 5) Fixează orice bug găsit în producție. 6) Verifică că eval-ul rulează și în producție." },
-          { id: "4-3-7", day: "Săp. 44 Zi 1–2", text: "README complet. Exercițiu: 1) Deschide README.md. 2) Secțiunea 1: Ce face produsul (2–3 fraze, pentru non-tehnici). 3) Secțiunea 2: Tech stack cu justificare pentru fiecare alegere. 4) Secțiunea 3: Arhitectura AI — cum funcționează feature-ul principal. 5) Secțiunea 4: Cum rulezi local (comenzi exacte). 6) Secțiunea 5: Eval results — scorul obținut." },
-          { id: "4-3-8", day: "Săp. 44 Zi 3", text: "Demo video. Exercițiu: 1) Deschide Loom sau QuickTime. 2) Înregistrează maxim 3 minute. 3) Structura: 30 sec — problema rezolvată. 1 min — demo live al feature-ului AI. 30 sec — arhitectura tehnică (arată codul). 30 sec — eval results. 4) Nu reînregistra mai mult de 3 ori — imperfecțiunile sunt ok." },
-          { id: "4-3-9", day: "Săp. 44 Zi 4", text: "GitHub polish. Exercițiu: 1) Adaugă badges în README: build status, demo link, license. 2) Adaugă screenshots sau GIF în README. 3) Adaugă link la demo video. 4) Verifică că repo-ul are: .gitignore corect (fără .env), LICENSE, CONTRIBUTING.md dacă e open source. 5) Pinuiește repo-ul în profilul tău GitHub." },
-          { id: "4-3-10", day: "Săp. 44 Zi 5 — CHECKPOINT", text: "Simulare interviu: 1) Setează un timer de 10 minute. 2) Prezintă proiectul ca la un interviu real: problema → soluție → arhitectură → demo live → eval results → ce ai face diferit. 3) Dacă nu termini în 10 minute sau te bâlbâi, mai exersează. 4) Înregistrează prezentarea — ascultă-te. 5) Ești gata când poți prezenta fără ezitări." },
-        ]
-      },
-      {
-        id: "4-4",
-        week: "45–52",
-        topic: "Interview Prep + Lansare",
-        books: ["The Art of Clean Code (citit rapid — pentru interviu de coding)", "Deep Work — Cal Newport (recitit, pentru sprint final)"],
-        online: "Mock interviews cu Claude",
-        onlineUrl: null,
-        checkpoint: "Minimum 3 interviuri tehnice programate",
-        todos: [
-          { id: "4-4-1", day: "Săp. 45–46 Zi 1–3", text: "Designing ML Systems — cap. 1–4. Exercițiu: 1) Citește cap. 1–2 în prima zi cu notițe active. 2) Cap. 3–4 în a doua zi. 3) Pentru fiecare concept, notează: cum se aplică la ECapturo sau produsele tale? 4) Zi 3: scrie un 'system design' de 1 pagină pentru ECapturo ca și cum l-ai prezenta la interviu." },
-          { id: "4-4-2", day: "Săp. 45–46 Zi 4–5", text: "Mock interview conceptual (cu Claude). Exercițiu: 1) Deschide o conversație nouă cu Claude. 2) Spune: 'Ești un interviewer AI engineer. Pune-mi 10 întrebări conceptuale despre RAG, evals, hallucinations și fine-tuning vs prompting. Evaluează fiecare răspuns.' 3) Răspunde fără să cauți. 4) Notează ce ai greșit. 5) Reia acele concepte." },
-          { id: "4-4-3", day: "Săp. 46 Zi 1–2", text: "Mock interview system design. Exercițiu: 1) Prompt Claude: 'Dă-mi o problemă de system design AI: proiectează un sistem de extracție automată de date din facturi la scară mare (10.000 facturi/zi).' 2) Ai 45 minute să proiectezi. 3) Desenează arhitectura pe hârtie. 4) Prezintă-o lui Claude. 5) Cere feedback." },
-          { id: "4-4-4", day: "Săp. 47 Zi 1–3", text: "Designing ML Systems — cap. 5–8. Exercițiu: 1) Citește cu notițe. 2) Focus pe: feature engineering, model selection, deployment, monitoring. 3) Notează: ce din carte e relevant pentru un AI Engineer care lucrează cu LLMs (nu ML clasic)? 4) Scrie 10 întrebări pe care le-ai putea primi la interviu din aceste capitole." },
-          { id: "4-4-5", day: "Săp. 47 Zi 4–5", text: "Mock interview coding. Exercițiu: 1) Prompt Claude: 'Dă-mi 5 exerciții de coding relevante pentru un AI Engineer junior: Python, string manipulation, API calls, JSON parsing, algoritmi simpli.' 2) Rezolvă fiecare în 15 minute maxim. 3) Cere feedback pe soluțiile tale. 4) Rezolvă din nou cele unde ai greșit." },
-          { id: "4-4-6", day: "Săp. 48 Zi 1–2", text: "CV actualizat. Exercițiu: 1) Deschide CV-ul. 2) Pentru fiecare proiect, adaugă metrici concrete: 'Eval accuracy 87% pe 200 facturi de test', 'RAG cu latency < 2s', 'Reduce costul API cu 40% prin prompt caching'. 3) Adaugă skill-urile noi: RAG, Evals, Anthropic API, pgvector, Next.js 14, TypeScript. 4) Headline: 'QA Automation Engineer | AI Engineer'." },
-          { id: "4-4-7", day: "Săp. 48 Zi 3–5", text: "LinkedIn actualizat. Exercițiu: 1) Headline: 'QA Automation Engineer → AI Engineer | Building AI-powered SaaS'. 2) About: 3 paragrafe — cine ești, ce construiești, ce cauți. 3) Projects: adaugă ECapturo cu demo link și tech stack. 4) Cere 2 recomandări de la colegi care știu munca ta. 5) Postează pe LinkedIn despre proiectul tău flagship." },
-          { id: "4-4-8", day: "Săp. 49–50", text: "Aplicări. Exercițiu: 1) Caută: 'AI Engineer', 'LLM Engineer', 'AI Developer', 'QA Automation + AI' pe LinkedIn, Upwork, remote.co. 2) Aplică la minimum 10 roluri. 3) Pentru fiecare, customizează paragraful de intro: menționează proiectul relevant pentru ei. 4) Trackează într-un spreadsheet: companie, rol, dată, status." },
-          { id: "4-4-9", day: "Săp. 51", text: "Lansare publică ECapturo. Exercițiu: 1) Verifică că produsul e live și funcțional. 2) Scrie un post LinkedIn: problema rezolvată + demo video + link. 3) Postează pe Product Hunt dacă ești pregătit. 4) Anunță pe orice comunitate relevantă. 5) Scopul nu e viral — e să ai ceva concret de arătat la interviu." },
-          { id: "4-4-10", day: "Săp. 52 — CHECKPOINT FINAL", text: "1) Numără interviurile programate — trebuie să fie minimum 3. 2) Dacă ai 0 interviuri: analizează CV-ul și aplicările — unde e problema? 3) Dacă ai interviuri dar nu oferte: analizează feedback-ul — ce întrebări te-au prins? 4) Reia mock interviews pentru acele zone. 5) Dacă ai o ofertă: felicitări — planul a funcționat." },
-        ]
-      }
-    ]
-  }
+    week: 4, phase: 1, phaseTitle: "JavaScript Solid", color: "#F5C518",
+    topic: "Async — Promises & async/await",
+    resource: "javascript.info — Cap. 11",
+    resourceUrl: "https://javascript.info/async",
+    days: [
+      { day: 1, title: "Promises basics", read: "javascript.info 11.1–11.3", task: "Scrie fetchUser(id) care returnează un Promise cu setTimeout. Înlănțuiește: fetchUser(1).then(user => fetchOrders(user.id)).then(console.log). Adaugă .catch() la final." },
+      { day: 2, title: "Promise.all & allSettled", read: "javascript.info 11.4–11.5", task: "Ai 3 funcții cu Promise-uri. Rulează-le în paralel cu Promise.all. Testează că dacă una eșuează, toate eșuează. Înlocuiește cu Promise.allSettled și observă diferența." },
+      { day: 3, title: "async/await", read: "javascript.info 11.6–11.7", task: "Ia funcția cu .then() de ieri. Rescrie-o complet cu async/await și try/catch. Deschide ECapturo. Găsește un fetch real și rescrie-l cu .then() pur — înțelege ce face await de fapt." },
+      { day: 4, title: "Error handling async", read: "javascript.info 11.8", task: "Scrie fetchAll(urls) care face toate request-urile în paralel. Dacă oricare eșuează, continuă cu celelalte. Returnează [{url, data, error}] pentru fiecare URL." },
+      { day: 5, title: "Async în context real", read: "Proiectele tale", task: "Deschide un API route din ECapturo. Desenează pe hârtie fluxul async complet: request → validare → DB → răspuns. Unde pot apărea erori? Sunt toate gestionate?" },
+      { day: 6, title: "Exercițiu complet", read: "Fără lectură", task: "Scrie din memorie: o funcție async care face 3 fetch-uri în paralel, gestionează erorile individual, loghează rezultatele și timpul total de execuție." },
+      { day: 7, title: "CHECKPOINT", read: "—", task: "CHECKPOINT: Rescrie un API route din proiect fără async/await — doar .then(). Dacă te blochezi, reia zilele 1–3." },
+    ],
+    checkpoint: "Rescrii orice cod async din proiect cu .then() sau async/await la cerere, fără să cauți."
+  },
+  {
+    week: 5, phase: 1, phaseTitle: "JavaScript Solid", color: "#F5C518",
+    topic: "React — cum funcționează cu adevărat",
+    resource: "react.dev/learn — Describing UI + Adding Interactivity",
+    resourceUrl: "https://react.dev/learn",
+    days: [
+      { day: 1, title: "Componente & Props", read: "react.dev — First Component + Props", task: "Creează Button.tsx cu prop label. Randează 3 butoane diferite. Creează InvoiceCard cu props client, suma, data, isPaid. Stilizează cu Tailwind." },
+      { day: 2, title: "Lists & Conditional rendering", read: "react.dev — Conditional + Lists", task: "Randează o listă de 5 facturi cu .map() și key unic. Adaugă buton 'Arată doar neplătite'. Dacă lista e goală, arată mesaj 'Nicio factură găsită'." },
+      { day: 3, title: "useState", read: "react.dev — useState", task: "Creează un form cu câmpuri client și sumă controlate cu useState. La submit adaugă factura în lista de facturi. Curăță form-ul după submit." },
+      { day: 4, title: "State as snapshot", read: "react.dev — State as snapshot", task: "Scrie un buton care face setCount(count+1) de 3 ori. Observă că adaugă doar 1. Repară cu setCount(c => c+1). Explică în scris de ce funcționează acum." },
+      { day: 5, title: "useEffect", read: "react.dev — useEffect", task: "Adaugă un useEffect care loghează la fiecare render. Testează cu dependency array gol. Adaugă un câmp în array. Adaugă cleanup. Observă ordinea în consolă." },
+      { day: 6, title: "Lifting state up", read: "react.dev — Lifting state up", task: "Ai InvoiceList și InvoiceTotal ca surori. Mută state-ul în componenta părinte. Pasează datele ca props. Verifică că totalul se actualizează când adaugi o factură." },
+      { day: 7, title: "CHECKPOINT", read: "—", task: "CHECKPOINT: Deschide o componentă React din ECapturo. Identifică toate useState-urile, useEffect-urile și props-urile. Explică de ce se rerenderizează." },
+    ],
+    checkpoint: "Știi de ce se rerenderizează o componentă și cum să oprești rerenderizările inutile."
+  },
+  {
+    week: 6, phase: 1, phaseTitle: "JavaScript Solid", color: "#F5C518",
+    topic: "React avansat — patterns & proiect",
+    resource: "react.dev/learn + Head First Design Patterns cap. 1–2",
+    resourceUrl: "https://react.dev/learn",
+    days: [
+      { day: 1, title: "useReducer & Context", read: "react.dev — useReducer + Context", task: "Rescrie lista de facturi cu useReducer în loc de useState. Adaugă actions: ADD_INVOICE, DELETE_INVOICE, TOGGLE_PAID. Testează fiecare action." },
+      { day: 2, title: "Custom hooks", read: "react.dev — Custom Hooks", task: "Extrage logica de fetch într-un custom hook useInvoices(). Returnează {data, loading, error}. Folosește-l în componentă. Adaugă un refetch()." },
+      { day: 3, title: "Design Patterns în React", read: "Head First Design Patterns cap. 1–2", task: "Citește despre Observer și Strategy pattern. Identifică unde React folosește Observer (useState + re-render). Scrie în GoodNotes ce pattern-uri recunoști în codul tău." },
+      { day: 4, title: "Performance", read: "react.dev — useMemo + useCallback", task: "Adaugă useMemo pentru calculul totalului (se recalculează doar când facturi se schimbă). Adaugă useCallback pe handleSubmit. Verifică în React DevTools că rerenderizările s-au redus." },
+      { day: 5, title: "Mini-proiect React", read: "Fără lectură", task: "Construiește un mini-dashboard cu 3 componente: FilterBar, InvoiceList, Summary. FilterBar are search și select lună. Summary arată totalul vizibil. Comunică prin state în părinte." },
+      { day: 6, title: "Review & refactor", read: "Proiectele tale", task: "Deschide cel mai vechi component React din proiectele tale. Refactorizează-l aplicând ce ai învățat: custom hook, memo, structură clară. Compară înainte/după." },
+      { day: 7, title: "CHECKPOINT", read: "—", task: "CHECKPOINT: Construiești din memorie un form React complet cu validare, submit și error handling — fără tutorial." },
+    ],
+    checkpoint: "Construiești orice componentă React de la zero fără să cauți documentație."
+  },
+  {
+    week: 7, phase: 1, phaseTitle: "JavaScript Solid", color: "#F5C518",
+    topic: "Next.js — App Router, routing, data fetching",
+    resource: "nextjs.org/docs — App Router",
+    resourceUrl: "https://nextjs.org/docs",
+    days: [
+      { day: 1, title: "App Router overview", read: "Next.js docs — Routing fundamentals", task: "Desenează arhitectura App Router pe hârtie: root layout, page.tsx, nested routes. Creează proiect nou. Adaugă rutele: /, /facturi, /facturi/[id]. Verifică în browser." },
+      { day: 2, title: "Layouts & navigare", read: "Next.js docs — Layouts + Link", task: "Creează layout.tsx pentru /facturi cu sidebar. Sidebar cu linkuri <Link>. Fiecare pagină afișează params.id în titlu. Stilizează cu Tailwind — layout persistă între pagini." },
+      { day: 3, title: "Server vs Client Components", read: "Next.js docs — Server & Client Components", task: "Creează ServerTime (Server Component). Creează Counter cu useState (Client Component). Combină-le. Explică în scris de ce ServerTime nu poate folosi useState." },
+      { day: 4, title: "Data Fetching", read: "Next.js docs — Data Fetching", task: "Fetch date de la jsonplaceholder.typicode.com/todos în Server Component. Adaugă revalidate: 60. Adaugă loading.tsx și error.tsx. Testează că apar corect." },
+      { day: 5, title: "API Routes", read: "Next.js docs — Route Handlers", task: "Creează app/api/facturi/route.ts. GET returnează array mock. POST primește {client, suma} și validează. Dacă suma lipsește returnează 400. Testează cu Postman sau curl." },
+      { day: 6, title: "Middleware & Auth", read: "Next.js docs — Middleware", task: "Creează middleware.ts. Protejează /dashboard și /api (excepție /api/webhook). Redirect la /login dacă nu ești autentificat. Testează ștergând cookie-ul manual." },
+      { day: 7, title: "CHECKPOINT", read: "—", task: "CHECKPOINT: Explică fără să cauți: SSR vs SSG vs ISR și când folosești fiecare. Identifică în proiect care componente sunt Server și care Client." },
+    ],
+    checkpoint: "Știi diferența Server/Client Component și implementezi routing + API routes fără tutorial."
+  },
+  {
+    week: 8, phase: 1, phaseTitle: "JavaScript Solid", color: "#F5C518",
+    topic: "Next.js avansat + proiect Faza 1",
+    resource: "nextjs.org/docs — Optimizations + Image + Font",
+    resourceUrl: "https://nextjs.org/docs/app/building-your-application/optimizing",
+    days: [
+      { day: 1, title: "Server Actions", read: "Next.js docs — Server Actions", task: "Convertește un API route POST simplu într-un Server Action. Apelează-l direct din componentă fără fetch. Adaugă revalidatePath după mutație." },
+      { day: 2, title: "Image & Font optimization", read: "Next.js docs — Optimizations", task: "Înlocuiește orice <img> cu <Image> din next/image. Adaugă un font cu next/font. Deschide Network tab și compară dimensiunile înainte/după." },
+      { day: 3, title: "Form complet cu Next.js", read: "Fără lectură", task: "Adaugă pagina /facturi/nou cu form complet: câmpuri client, sumă, dată. La submit face POST la /api/facturi. La succes redirect la /facturi. La eroare afișează mesajul lângă câmp." },
+      { day: 4, title: "Responsive UI", read: "Tailwind docs — Responsive", task: "Ia pagina /facturi. Fă layout-ul responsive: mobile = o coloană, desktop = două coloane. Doar Tailwind, fără CSS custom. Testează în DevTools la diferite dimensiuni." },
+      { day: 5, title: "Proiect liber Faza 1", read: "Fără lectură", task: "Construiește o pagină nouă în ECapturo sau Invoysr din memorie: routing, layout, fetch date, form, API route. Fără tutorial. Dacă te blochezi > 30 min, poți căuta." },
+      { day: 6, title: "Review Faza 1", read: "Notițele tale", task: "Recitește toate notițele din GoodNotes din ultimele 8 săptămâni. Notează: ce a rămas neclar? Ce ai vrea să aprofundezi? Ce ți-a plăcut cel mai mult?" },
+      { day: 7, title: "CHECKPOINT FAZA 1", read: "—", task: "CHECKPOINT FINAL FAZA 1: Construiești de la zero o pagină Next.js cu: Server Component care fetch-uiește date, Client Component cu form, API route cu validare Zod, middleware de auth. Fără tutorial." },
+    ],
+    checkpoint: "Construiești orice pagină Next.js de la zero, singur, fără să te uiți la alte proiecte."
+  },
+
+  // ── FAZA 2: Full Stack Independent ────────────────────────────────────────
+  {
+    week: 9, phase: 2, phaseTitle: "Full Stack Independent", color: "#00C896",
+    topic: "SQL & Supabase în profunzime",
+    resource: "sqlzoo.net + Supabase docs",
+    resourceUrl: "https://sqlzoo.net",
+    days: [
+      { day: 1, title: "SELECT basics", read: "sqlzoo.net — SELECT basics", task: "Fă toate exercițiile SELECT basics. Apoi în Supabase SQL editor: creează tabelul facturi cu id, client_id, suma, created_at, is_paid. Inserează 5 rânduri manual." },
+      { day: 2, title: "Filtrare & sortare", read: "sqlzoo.net — SELECT from World", task: "Scrie query care returnează facturile din ultima lună (created_at > NOW() - INTERVAL '30 days'). Sortează DESC după sumă. Limitează la primele 3. Combină toate trei." },
+      { day: 3, title: "JOIN", read: "sqlzoo.net — JOIN", task: "Creează tabelul clienti cu id și nume. Scrie JOIN între facturi și clienti pentru a obține numele clientului la fiecare factură. Adaugă GROUP BY și COUNT(*) per client." },
+      { day: 4, title: "Subqueries & agregări", read: "sqlzoo.net — SELECT within SELECT", task: "Scrie query cu subquery: facturi WHERE client_id IN (SELECT id FROM clienti WHERE...). Rescrie cu JOIN. Adaugă HAVING pentru a filtra clienții cu total > 1000." },
+      { day: 5, title: "Indecși & performanță", read: "Supabase docs — Database", task: "Adaugă index pe client_id: CREATE INDEX idx_client_id ON facturi(client_id). Rulează EXPLAIN ANALYZE cu și fără index. Compară timpii. Notează când are sens un index." },
+      { day: 6, title: "RLS — Row Level Security", read: "Supabase docs — RLS", task: "Activează RLS pe tabelul facturi. Adaugă policy: SELECT permis doar dacă auth.uid() = user_id. Testează din UI. Adaugă policy pentru INSERT. Verifică că un user nu vede datele altuia." },
+      { day: 7, title: "CHECKPOINT", read: "—", task: "CHECKPOINT: Scrie din memorie query-ul care returnează top 5 clienți după totalul facturilor din luna curentă, cu numărul de facturi și suma totală." },
+    ],
+    checkpoint: "Scrii queries cu JOIN, GROUP BY, subqueries și RLS policies fără să cauți sintaxa."
+  },
+  {
+    week: 10, phase: 2, phaseTitle: "Full Stack Independent", color: "#00C896",
+    topic: "Schema ECapturo + TypeScript",
+    resource: "Total TypeScript (gratuit) + Supabase docs",
+    resourceUrl: "https://www.totaltypescript.com/tutorials",
+    days: [
+      { day: 1, title: "Schema DB ECapturo", read: "Supabase docs — Relationships", task: "Pe hârtie: proiectează schema completă ECapturo — tabele, coloane, relații. Implementează în Supabase. Adaugă foreign keys. Testează că integritatea referențială funcționează." },
+      { day: 2, title: "RLS pe toată schema", read: "Supabase docs — RLS", task: "Activează RLS pe TOATE tabelele ECapturo. Scrie policies pentru SELECT, INSERT, UPDATE, DELETE pe fiecare tabel. Testează cu 2 useri diferiți că nu se văd datele reciproc." },
+      { day: 3, title: "TypeScript — tipuri de bază", read: "Total TypeScript — lecțiile 1–5", task: "Creează types.ts. Definește tipul Factura cu toate câmpurile. Definește Client. Creează array tipat. Încearcă să adaugi o proprietate inexistentă — observă eroarea TS." },
+      { day: 4, title: "TypeScript — Interface vs Type", read: "Total TypeScript — lecțiile 6–10", task: "Definește interface și type pentru Factura. Extinde cu FacturaPlătită care adaugă datePlată. Creează union type Status = 'draft' | 'sent' | 'paid' | 'overdue'. Testează cu valori invalide." },
+      { day: 5, title: "TypeScript — Generics", read: "Total TypeScript — lecțiile 11–15", task: "Scrie tip generic ApiResponse<T> = { data: T; error: string | null; loading: boolean }. Scrie funcție generică fetchData<T>(url: string). Verifică că TypeScript inferează tipul corect." },
+      { day: 6, title: "TypeScript — Utility types", read: "Total TypeScript — lecțiile 16–20", task: "Folosește Partial<Factura> pentru form editare. Pick<Factura, 'id' | 'client'> pentru dropdown. Omit<Factura, 'id'> pentru creare. Scrie un type guard isFacturăPlătită." },
+      { day: 7, title: "CHECKPOINT", read: "—", task: "CHECKPOINT: Rulează tsc --noEmit în proiect. Trebuie să fie 0 erori și 0 'any'. Dacă nu — rezolvă toate erorile înainte să continui." },
+    ],
+    checkpoint: "Schema ECapturo e completă în Supabase cu RLS și proiectul compilează fără erori TS."
+  },
+  {
+    week: 11, phase: 2, phaseTitle: "Full Stack Independent", color: "#00C896",
+    topic: "TypeScript avansat + Zod",
+    resource: "Total TypeScript + Zod docs",
+    resourceUrl: "https://zod.dev",
+    days: [
+      { day: 1, title: "Elimină 'any' din proiect", read: "Proiectele tale", task: "Caută toate aparițiile de 'any' cu Ctrl+Shift+F. Pentru fiecare înlocuiește cu tipul corect. Tipează răspunsurile de la Anthropic API și Supabase. Zero 'any' la final." },
+      { day: 2, title: "Tipează funcțiile", read: "Proiectele tale", task: "Deschide fiecare fișier .ts/.tsx. Adaugă tipuri explicite la parametri și return values. Dacă o funcție returnează tipuri diferite, folosește union type." },
+      { day: 3, title: "Zod — validare runtime", read: "Zod docs — getting started", task: "npm install zod. Definește FacturaSchema cu toate câmpurile și validările. Adaugă în API route POST: const result = FacturaSchema.safeParse(body). Returnează 400 cu erorile dacă invalid." },
+      { day: 4, title: "Zod în toată aplicația", read: "Zod docs — transforms", task: "Adaugă validare Zod pe toate API routes din proiect. Creează un helper validateBody<T>(schema, body) reutilizabil. Testează cu body-uri invalide pentru fiecare endpoint." },
+      { day: 5, title: "Generic API handler", read: "Fără lectură", task: "Scrie createApiHandler<T>(schema: ZodSchema<T>) care validează body-ul, returnează eroare dacă invalid și date tipate dacă valid. Folosește-l în 2 API routes. Verifică că TypeScript inferează T corect." },
+      { day: 6, title: "Teste cu Vitest", read: "Vitest docs — getting started", task: "npm install vitest. Scrie un test pentru funcția de validare. Scrie un test pentru un API route handler (mock Supabase). Rulează npx vitest. Toate verzi." },
+      { day: 7, title: "CHECKPOINT", read: "—", task: "CHECKPOINT: tsc --noEmit = 0 erori. Caută 'any' = 0. Toate API routes au validare Zod. Cel puțin 3 teste verzi." },
+    ],
+    checkpoint: "TypeScript solid, Zod pe toate rutele, teste de bază funcționale."
+  },
+  {
+    week: 12, phase: 2, phaseTitle: "Full Stack Independent", color: "#00C896",
+    topic: "Proiect SaaS de la 0 — planificare & setup",
+    resource: "Pragmatic Thinking & Learning — 20 min/zi în paralel",
+    resourceUrl: null,
+    days: [
+      { day: 1, title: "Planificare pe hârtie", read: "Fără editor", task: "Scrie problema rezolvată în 1 frază. Listează toate paginile. Desenează schema DB cu tabele și relații. Listează toate API routes. Estimează ce termini în 4 săptămâni." },
+      { day: 2, title: "Setup din memorie", read: "Fără tutorial", task: "npx create-next-app@latest cu TypeScript + Tailwind + App Router. Supabase proiect nou. .env.local cu variabilele. Instalează @supabase/ssr. Verifică conexiunea cu un query simplu." },
+      { day: 3, title: "Autentificare", read: "Supabase Auth docs", task: "Pagina /login cu form email + parolă. signUp și signIn cu Supabase Auth. middleware.ts protejează /dashboard. Redirect după login. Testează ambele fluxuri." },
+      { day: 4, title: "Schema DB", read: "Fără lectură", task: "Creează toate tabelele planificate în Zi 1. Adaugă foreign keys. Activează RLS pe toate. Scrie policies pentru SELECT, INSERT, UPDATE, DELETE. Testează cu user de test." },
+      { day: 5, title: "Primul CRUD", read: "Fără lectură", task: "Pagina care listează entitatea principală. Form de creare cu validare Zod. API route POST care inserează în DB. Buton de ștergere cu confirmare. Loading states și error handling vizibil." },
+      { day: 6, title: "Componente reutilizabile", read: "Fără lectură", task: "Extrage form-ul într-o componentă separată. Creează Table<T> generic. Creează Button cu variante: primary, secondary, danger. Creează Modal reutilizabil. Refactorizează paginile." },
+      { day: 7, title: "CHECKPOINT", read: "—", task: "CHECKPOINT: Proiectul rulează local cu auth funcțional, cel puțin un CRUD complet și componente reutilizabile. Push pe GitHub." },
+    ],
+    checkpoint: "Proiect SaaS cu auth + CRUD funcțional, rulează local, pe GitHub."
+  },
+  {
+    week: 13, phase: 2, phaseTitle: "Full Stack Independent", color: "#00C896",
+    topic: "Proiect SaaS — construcție",
+    resource: "Fără tutorial — construiești singur",
+    resourceUrl: null,
+    days: [
+      { day: 1, title: "Pagini principale", read: "Fără lectură", task: "Implementează toate paginile planificate. La final de zi notează ce ai terminat și ce a rămas. Dacă ești blocat > 30 min, poți căuta — altfel gândești singur." },
+      { day: 2, title: "Construcție liberă", read: "Fără lectură", task: "Continuă construcția. Regulă: nu sări peste error handling. Fiecare operație trebuie să aibă un comportament clar la eroare — nu doar happy path." },
+      { day: 3, title: "Stripe", read: "Stripe docs — Checkout", task: "Creează cont Stripe + produs cu preț lunar. API route POST /api/checkout → Checkout Session. Buton Upgrade → redirect Stripe. Testează cu cardul 4242 4242 4242 4242." },
+      { day: 4, title: "Webhook Stripe", read: "Stripe docs — Webhooks", task: "stripe listen --forward-to localhost:3000/api/webhook. Verifică semnătura cu constructEvent. Tratează checkout.session.completed: marchează userul ca subscribed în DB." },
+      { day: 5, title: "Construcție liberă", read: "Fără lectură", task: "Finalizează toate paginile. Testează manual fiecare flux de la cap la coadă. Fixează bug-urile găsite." },
+      { day: 6, title: "Polish UI", read: "Fără lectură", task: "Adaugă loading skeleton în loc de spinner gol. Verifică că toate erorile sunt human-readable. Testează pe mobile — totul trebuie să fie responsive." },
+      { day: 7, title: "CHECKPOINT", read: "—", task: "CHECKPOINT: Toate paginile planificate sunt funcționale. Stripe funcționează în test mode. Niciun flux nu returnează eroare netreatată." },
+    ],
+    checkpoint: "Toate funcționalitățile planificate sunt implementate și testate manual."
+  },
+  {
+    week: 14, phase: 2, phaseTitle: "Full Stack Independent", color: "#00C896",
+    topic: "Proiect SaaS — deploy & backend deeper",
+    resource: "Vercel docs + Upstash + Sentry",
+    resourceUrl: "https://vercel.com/docs",
+    days: [
+      { day: 1, title: "Deploy pe Vercel", read: "Vercel docs", task: "Push pe GitHub. Deploy pe Vercel — conectează repo. Adaugă toate env variables. Testează TOATE fluxurile în producție (nu local). Fixează orice bug găsit în producție." },
+      { day: 2, title: "Rate limiting", read: "Upstash docs", task: "Creează cont gratuit Upstash Redis. npm install @upstash/ratelimit @upstash/redis. Adaugă rate limiting: max 20 req/minut per IP. Testează cu 25 request-uri. Verifică 429." },
+      { day: 3, title: "Error monitoring", read: "Sentry docs — Next.js", task: "Creează cont Sentry. npx @sentry/wizard@latest -i nextjs. Aruncă o eroare deliberată. Verifică că apare în dashboard cu stack trace. Adaugă Sentry.setTag('user_id', userId)." },
+      { day: 4, title: "Playwright E2E", read: "Playwright docs — getting started", task: "npm install @playwright/test. npx playwright install. Test 1: verifică că pagina / există. Test 2: login flow complet. Test 3: fluxul principal al aplicației. npx playwright test --headed." },
+      { day: 5, title: "Server Actions", read: "Next.js docs — Server Actions", task: "Convertește cel mai simplu API route POST într-un Server Action. Apelează direct din componentă. Adaugă revalidatePath. Compară: când folosești Server Actions vs API routes?" },
+      { day: 6, title: "Documentare flux", read: "Fără lectură", task: "Alege cel mai complex flux din aplicație. Pe hârtie: desenează fiecare pas cu săgeți. Pentru fiecare pas notează ce date intră, ce ies, ce se întâmplă la eroare. Verifică că totul e acoperit." },
+      { day: 7, title: "CHECKPOINT FAZA 2", read: "—", task: "CHECKPOINT FINAL FAZA 2: Proiectul e live pe Vercel, cu rate limiting, error monitoring, cel puțin 3 teste E2E verzi. Trimite link-ul unui prieten să testeze." },
+    ],
+    checkpoint: "SaaS complet live pe Vercel cu rate limiting, monitoring și teste E2E."
+  },
+
+  // ── FAZA 3: AI Foundations ────────────────────────────────────────────────
+  {
+    week: 15, phase: 3, phaseTitle: "AI Foundations", color: "#7B61FF",
+    topic: "Cum funcționează LLM-urile",
+    resource: "3Blue1Brown Neural Networks (YouTube) + Andrej Karpathy",
+    resourceUrl: "https://www.youtube.com/watch?v=aircAruvnKk",
+    days: [
+      { day: 1, title: "Ce e o rețea neurală", read: "3Blue1Brown ep. 1", task: "Vizionează. Deschide GoodNotes. Desenează o rețea neurală cu 3 layere din memorie: input, hidden, output. Etichetează weights și activations. Explică în scris de ce avem nevoie de layere multiple." },
+      { day: 2, title: "Gradient descent", read: "3Blue1Brown ep. 2", task: "Vizionează. Desenează o curbă de loss function. Marchează local minimum, global minimum, learning rate prea mare și potrivit. Explică cu cuvintele tale ce face gradient descent." },
+      { day: 3, title: "Backpropagation", read: "3Blue1Brown ep. 3", task: "Vizionează de 2 ori dacă e necesar. Scrie în GoodNotes ce calculează backpropagation și de ce e necesar. Desenează direcția: forward pass (stânga→dreapta), backward pass (dreapta→stânga)." },
+      { day: 4, title: "Attention & Transformers", read: "3Blue1Brown ep. 5–6", task: "Vizionează ambele. Desenează mecanismul de attention: Query, Key, Value. Explică în scris de ce attention e mai bun decât RNN pentru text lung. Ce înseamnă context window?" },
+      { day: 5, title: "Intro to LLMs", read: "Andrej Karpathy — Intro to LLMs (1h YouTube)", task: "Vizionează cu notițe active. Scrie: pretraining vs fine-tuning vs RLHF. 3 limitări fundamentale ale LLM-urilor. Ce face un AI Engineer diferit față de un utilizator normal?" },
+      { day: 6, title: "Tokenization & Hallucinations", read: "Anthropic blog — model cards", task: "Deschide platform.openai.com/tokenizer. Testează: 'hello', 'București', un emoji. Observă că tokenizarea nu e pe cuvinte. Testează română vs engleză. Scrie 3 cauze de hallucinations și 3 mitigări." },
+      { day: 7, title: "CHECKPOINT", read: "—", task: "CHECKPOINT: Explică unui prieten (sau înregistrează-te) ce e un transformer și de ce LLM-urile halucinează. Maxim 2 minute, fără jargon tehnic. Dacă te blochezi, reia zilele 4–5." },
+    ],
+    checkpoint: "Explici tokenization, attention și hallucinations fără să te uiți la notițe."
+  },
+  {
+    week: 16, phase: 3, phaseTitle: "AI Foundations", color: "#7B61FF",
+    topic: "Anthropic API — Messages, Streaming, Tools",
+    resource: "docs.anthropic.com",
+    resourceUrl: "https://docs.anthropic.com",
+    days: [
+      { day: 1, title: "Messages API", read: "Anthropic docs — Messages", task: "Creează test-api.ts. npm install @anthropic-ai/sdk. Trimite 'Hello' cu system prompt 'Ești un asistent pentru facturi'. Loghează: răspuns, input tokens, output tokens." },
+      { day: 2, title: "Streaming", read: "Anthropic docs — Streaming", task: "Creează API route /api/chat/stream. Folosește stream: true. Returnează ReadableStream. În frontend consumă stream-ul și afișează textul progresiv — nu tot dintr-o dată." },
+      { day: 3, title: "System prompts", read: "Anthropic docs — System prompts", task: "Scrie 5 system prompts diferite pentru extracție facturi. Testează fiecare cu aceleași 3 facturi. Care e mai precis? Care halucinează mai puțin? Documentează în GoodNotes." },
+      { day: 4, title: "Tool use", read: "Anthropic docs — Tool use", task: "Definește tool getFactura(id) care caută în Supabase. Trimite 'Arată-mi factura #123'. Claude trebuie să apeleze tool-ul automat. Testează cu id inexistent — ce face Claude?" },
+      { day: 5, title: "Prompt caching", read: "Anthropic docs — Prompt caching", task: "Adaugă cache_control: { type: 'ephemeral' } pe un system prompt lung. Fă 5 request-uri. Compară cache_creation_input_tokens vs cache_read_input_tokens. Calculează diferența de cost." },
+      { day: 6, title: "Vision API", read: "Anthropic docs — Vision", task: "Fotografiază o factură reală. Convertește la base64 cu fs.readFileSync().toString('base64'). Trimite lui Claude cu prompt: 'Extrage: număr, dată, furnizor, total, TVA'. Obține răspuns JSON." },
+      { day: 7, title: "CHECKPOINT", read: "—", task: "CHECKPOINT: Implementează într-un singur API route: tool use + streaming + prompt caching. Dacă nu funcționează, debug pas cu pas — mai întâi fără streaming, adaugă streaming, adaugă caching." },
+    ],
+    checkpoint: "Implementezi tool use + streaming + prompt caching într-un singur API call."
+  },
+  {
+    week: 17, phase: 3, phaseTitle: "AI Foundations", color: "#7B61FF",
+    topic: "Prompt Engineering & Evals",
+    resource: "Anthropic Prompt Engineering docs + DeepLearning.AI",
+    resourceUrl: "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview",
+    days: [
+      { day: 1, title: "Prompt Engineering overview", read: "Anthropic docs — Prompt Engineering complet", task: "Citește complet. Notează în GoodNotes toate tehnicile cu câte un exemplu. Care sunt relevante pentru ECapturo? Ce face un prompt bun vs prost pentru extracție date structurate?" },
+      { day: 2, title: "Chain of Thought", read: "Anthropic docs — CoT", task: "Ia un prompt de extracție factură fără CoT. Testează pe 5 facturi — notează acuratețea. Adaugă 'Gândește pas cu pas'. Testează pe aceleași 5. Compară. Ce câmpuri beneficiază mai mult?" },
+      { day: 3, title: "Few-shot prompting", read: "Anthropic docs — Examples", task: "Alege 3 facturi cu extracții corecte. Construiește prompt: Exemplu 1: [factură] → [JSON]. Exemplu 2: ... Acum extrage din: [factură nouă]. Testează pe 5 facturi noi. Compară cu zero-shot." },
+      { day: 4, title: "Evals — teorie", read: "DeepLearning.AI — Evaluating LLM Outputs lec. 1–3", task: "Completează lecțiile. Notează tipurile de metrici: exact match, fuzzy match, LLM-as-judge. Pentru ECapturo: ce metrică e cea mai relevantă pentru număr factură, dată, total, TVA?" },
+      { day: 5, title: "Evals — implementare", read: "DeepLearning.AI — lec. 4–6", task: "Scrie evalExtraction(expected: Factura, actual: Factura): number — returnează scor 0-1. Testează pe 3 perechi. Verifică: 1.0 când identice, 0.0 când complet diferite." },
+      { day: 6, title: "Eval dataset ECapturo", read: "Fără lectură", task: "Colectează 20 facturi reale sau generate. Extrage manual câmpurile pentru fiecare — asta e ground truth. Salvează în eval-dataset.json. Rulează promptul curent pe toate 20. Calculează acuratețea." },
+      { day: 7, title: "CHECKPOINT", read: "—", task: "CHECKPOINT: Rulezi eval-ul complet. Acuratețea > 80% pe câmpurile principale. Dacă nu, mai fă o iterație: uită-te la greșeli, modifică promptul, rulează din nou." },
+    ],
+    checkpoint: "Ai un eval framework funcțional cu scor > 80% pe extracția de facturi."
+  },
+  {
+    week: 18, phase: 3, phaseTitle: "AI Foundations", color: "#7B61FF",
+    topic: "RAG & Embeddings",
+    resource: "DeepLearning.AI — RAG course (gratuit)",
+    resourceUrl: "https://www.deeplearning.ai/short-courses/",
+    days: [
+      { day: 1, title: "Ce sunt embeddings", read: "DeepLearning.AI — RAG lec. 1–3", task: "Completează lecțiile. Desenează în GoodNotes arhitectura RAG: document → chunks → embeddings → vector DB → query → retrieval → context → LLM → răspuns. De ce e mai bun decât tot documentul în context?" },
+      { day: 2, title: "pgvector în Supabase", read: "Supabase docs — pgvector", task: "CREATE EXTENSION vector în Supabase. Creează tabel: documents(id, content TEXT, embedding vector(1024), metadata JSONB). Generează un embedding pentru un text scurt. Inserează și verifică." },
+      { day: 3, title: "Pipeline de indexare", read: "Fără lectură", task: "Scrie chunkText(text, chunkSize, overlap) care împarte textul în bucăți cu overlap. Testează cu document de 1000 cuvinte, chunkSize=200, overlap=50. Verifică că nu taie cuvinte la mijloc." },
+      { day: 4, title: "Search semantic", read: "Fără lectură", task: "Scrie searchDocuments(query: string). Generează embedding pentru query. Caută în Supabase cu cosine similarity: ORDER BY embedding <=> queryEmbedding LIMIT 5. Compară cu ILIKE — ce e mai precis?" },
+      { day: 5, title: "RAG complet în ECapturo", read: "Fără lectură", task: "Adaugă pagina /chat în ECapturo. La upload factură: extrage text, împarte în chunks, generează embeddings, stochează. La întrebare: caută chunks relevante, adaugă ca context, generează răspuns." },
+      { day: 6, title: "Optimizare RAG", read: "Fără lectură", task: "Testează cu chunk sizes diferite: 100, 200, 500. Testează cu overlap diferit: 0, 50, 100. Testează cu 3, 5, 10 chunks returnate. Scrie în GoodNotes configurația optimă și de ce funcționează." },
+      { day: 7, title: "CHECKPOINT", read: "—", task: "CHECKPOINT: Uploadezi o factură → pui o întrebare despre ea → primești răspuns corect. Feature-ul e live în producție. Înregistrează un demo de 2 minute." },
+    ],
+    checkpoint: "RAG funcțional în ECapturo în producție. Demo înregistrat."
+  },
+  {
+    week: 19, phase: 3, phaseTitle: "AI Foundations", color: "#7B61FF",
+    topic: "AI Agents",
+    resource: "DeepLearning.AI — Agents course (gratuit)",
+    resourceUrl: "https://www.deeplearning.ai/short-courses/",
+    days: [
+      { day: 1, title: "Ce e un agent", read: "DeepLearning.AI — Agents lec. 1–3", task: "Completează lecțiile. Desenează diferența: chatbot simplu (input → LLM → output) vs agent (input → LLM → tool decision → tool execution → LLM → output). Când folosești agent vs API call simplu?" },
+      { day: 2, title: "Tool calling pentru agenți", read: "DeepLearning.AI — Agents lec. 4–6", task: "Definește 3 tools pentru un agent de facturi: searchFacturi, getClient, calculateTotal. Scrie schema pentru fiecare. Trimite un mesaj și lasă Claude să decidă ce tool să apeleze." },
+      { day: 3, title: "Agent complet", read: "Fără lectură", task: "Construiește un agent care răspunde: 'Care e totalul facturilor din luna trecută?' Trebuie să: înțeleagă → apeleze tool potrivit → primească date din DB → formuleze răspuns natural. Testează cu 5 întrebări." },
+      { day: 4, title: "Error handling în agenți", read: "Anthropic docs — Tool use error handling", task: "Testează ce face agentul când: tool-ul returnează eroare, DB e gol, întrebarea e ambiguă. Adaugă fallback pentru fiecare caz. Documentează comportamentul." },
+      { day: 5, title: "Agent în proiect real", read: "Fără lectură", task: "Integrează agentul în ECapturo sau Competary. Adaugă o pagină /assistant. Userul poate pune întrebări în limbaj natural despre datele lui. Agentul răspunde folosind DB-ul real." },
+      { day: 6, title: "Fine-tuning vs Prompting", read: "Anthropic docs — Fine-tuning", task: "Citește docs despre fine-tuning. Notează: 3 scenarii unde fine-tuning bate prompting și 3 unde prompting e suficient. Pentru ECapturo: ai nevoie de fine-tuning? Argumentează în scris." },
+      { day: 7, title: "CHECKPOINT FAZA 3", read: "—", task: "CHECKPOINT FINAL FAZA 3: Agent funcțional în producție. RAG funcțional. Eval framework cu scor documentat. Poți explica la interviu: RAG, tool use, evals, hallucinations." },
+    ],
+    checkpoint: "Agent AI funcțional în producție. Poți explica toate conceptele la interviu."
+  },
+
+  // ── FAZA 4: AI Engineer Ready ─────────────────────────────────────────────
+  {
+    week: 20, phase: 4, phaseTitle: "AI Engineer Ready", color: "#FF4D6D",
+    topic: "Python pentru AI",
+    resource: "Automate the Boring Stuff with Python (cartea ta)",
+    resourceUrl: "https://automatetheboringstuff.com",
+    days: [
+      { day: 1, title: "Python basics", read: "Automate cap. 1–2", task: "Instalează Python 3.12+. Deschide REPL. Scrie hello.py. Dacă știi deja Python basic, sari direct la cap. 7. Scrie calculate_vat(total, rate=0.19) cu type hints." },
+      { day: 2, title: "Functions & Lists", read: "Automate cap. 3–4", task: "Scrie process_invoices(invoices: list) care calculează totalul și TVA pentru fiecare. Testează cu 5 dicționare {client, suma}. Compară: cum diferă list comprehension față de .map() din JS?" },
+      { day: 3, title: "Dicts & Strings", read: "Automate cap. 5–6", task: "Creează dicționar facturi {id: {client, suma, data}}. Scrie get_by_client(invoices, client) și get_overdue(invoices, days=30). Scrie o funcție care formatează o factură ca string." },
+      { day: 4, title: "Files & CSV", read: "Automate cap. 7–8", task: "Creează facturi.csv cu 10 rânduri. Citește cu csv.DictReader. Filtrează neplătite. Calculează total neplătit. Scrie rezultatele în raport.csv. Verifică că e corect formatat." },
+      { day: 5, title: "PDF & web", read: "Automate cap. 9–11", task: "Scrie script care citește un folder cu fișiere .txt (simulate facturi). Pentru fiecare extrage textul și primele 200 caractere. Salvează totul în all_invoices.txt." },
+      { day: 6, title: "Anthropic API din Python", read: "Anthropic Python SDK docs", task: "pip install anthropic. Scrie extract_invoice.py: citește text factură, apelează claude-sonnet-4-20250514, parsează răspunsul JSON. Testează cu 3 facturi. Salvează în invoices_extracted.json." },
+      { day: 7, title: "CHECKPOINT", read: "—", task: "CHECKPOINT: Scrie din memorie un script Python: citește invoices.csv, apelează Claude pentru fiecare rând, parsează răspunsul, salvează în results.json. Rulează fără erori." },
+    ],
+    checkpoint: "Scrii și rulezi scripturi Python care apelează Anthropic API fără să cauți sintaxa."
+  },
+  {
+    week: 21, phase: 4, phaseTitle: "AI Engineer Ready", color: "#FF4D6D",
+    topic: "ML Fundamentals pentru interviu",
+    resource: "Grokking Algorithms (cartea ta) + fast.ai lec. 1–5",
+    resourceUrl: "https://course.fast.ai",
+    days: [
+      { day: 1, title: "Algoritmi — Big O", read: "Grokking Algorithms cap. 1–3", task: "Implementează binary_search(arr, target) în Python fără carte. Testează cu 1000 elemente. Calculează: câți pași face binary search vs linear search pentru 1000 elemente? Ce înseamnă O(log n)?" },
+      { day: 2, title: "Algoritmi — Hash tables", read: "Grokking Algorithms cap. 4–6", task: "Implementează quicksort. Creează un dict și testează că lookup e O(1). Implementează BFS pe un graf de 5 noduri. Unde apar hash tables în codul tău JS/TS?" },
+      { day: 3, title: "K-nearest neighbors", read: "Grokking Algorithms cap. 7–10", task: "Citește cap. 10 — KNN. Implementează knn_classify cu distanță Euclidiană. Testează: clasifică un punct față de 5 puncte existente. Leagă cu cosine similarity din RAG." },
+      { day: 4, title: "fast.ai — primul model", read: "fast.ai Lesson 1", task: "Deschide Kaggle → New Notebook. Urmează lecția pas cu pas — nu copia și run all. La fiecare celulă scrie în comentariu ce face. Antrenează modelul. Testează cu o imagine proprie." },
+      { day: 5, title: "Training loop", read: "fast.ai Lesson 2–3", task: "Urmează lecțiile. Scrie din memorie structura unui training loop. Explică ce face: optimizer.zero_grad(), loss.backward(), optimizer.step(). Notează: accuracy, loss, de ce diferă pe train vs validation." },
+      { day: 6, title: "NLP & clasificare text", read: "fast.ai Lesson 4–5", task: "Antrenează un model de clasificare text pe Kaggle pe un dataset simplu (sentiment analysis). 3 epoci. Evaluează pe validation set. Notează: accuracy, loss, câte minute a durat." },
+      { day: 7, title: "CHECKPOINT", read: "—", task: "CHECKPOINT: Explică fără să cauți: overfitting, underfitting, learning rate (prea mare vs prea mic), training vs validation split. Scrie explicațiile în GoodNotes — le vei folosi la interviu." },
+    ],
+    checkpoint: "Explici conceptele ML de bază la interviu și ai antrenat un model real pe Kaggle."
+  },
+  {
+    week: 22, phase: 4, phaseTitle: "AI Engineer Ready", color: "#FF4D6D",
+    topic: "Proiect flagship — planificare & core AI",
+    resource: "Fără tutorial",
+    resourceUrl: null,
+    days: [
+      { day: 1, title: "Decizie & specificații", read: "Fără lectură", task: "Decide: ECapturo complet SAU un tool AI nou. Scrie 1 pagină: problema rezolvată, cine o folosește, 3 features principale, tech stack cu justificare, cum arată 'done'." },
+      { day: 2, title: "Arhitectură pe hârtie", read: "Fără lectură", task: "Desenează: toate paginile, schema DB, API routes (method, path, input, output), fluxul AI (input → procesare → output). Ce e cel mai riscant tehnic? Rezolvă aia primul." },
+      { day: 3, title: "Core AI feature", read: "Fără lectură", task: "Implementează feature-ul AI principal (vision + extracție, RAG, sau agent). Nu lucra la UI încă. Testează cu 5 inputs diferite și verifică că output-ul e corect." },
+      { day: 4, title: "Core AI feature cont.", read: "Fără lectură", task: "Continuă implementarea feature-ului AI. Dacă ești blocat > 1 zi, simplifică scope-ul. La final de zi: funcționează feature-ul de bază? Da/Nu — notează ce a rămas." },
+      { day: 5, title: "Auth + DB", read: "Fără lectură", task: "Adaugă auth (Supabase). Creează schema DB cu RLS. Conectează feature-ul AI la date reale din DB în loc de mock data." },
+      { day: 6, title: "UI de bază", read: "Fără lectură", task: "Creează layout-ul de bază și pagina principală cu feature-ul AI integrat. Loading states, error states, empty states — toate trebuie să aibă UI, nu doar happy path." },
+      { day: 7, title: "CHECKPOINT", read: "—", task: "CHECKPOINT: Feature-ul AI funcționează end-to-end: input real → procesare AI → output afișat în UI. Dacă nu, identifică exact ce lipsește și prioritizează." },
+    ],
+    checkpoint: "Feature-ul AI funcționează end-to-end cu date reale."
+  },
+  {
+    week: 23, phase: 4, phaseTitle: "AI Engineer Ready", color: "#FF4D6D",
+    topic: "Proiect flagship — finalizare & deploy",
+    resource: "Fără tutorial",
+    resourceUrl: null,
+    days: [
+      { day: 1, title: "Finalizare UI", read: "Fără lectură", task: "Finalizează toate paginile planificate. Testează fiecare flux complet. Fixează ce nu merge." },
+      { day: 2, title: "Eval framework", read: "Fără lectură", task: "Creează eval-dataset.json cu 20 exemple. Scrie run-evals.ts care rulează toate și calculează scorul. Rulează — notează scorul inițial. Adaugă npm run eval în package.json." },
+      { day: 3, title: "Îmbunătățire prompt", read: "Fără lectură", task: "Dacă scorul e sub 75%: uită-te la greșeli, identifică pattern-ul, modifică promptul, rulează din nou. Documentează: scor înainte → modificare → scor după." },
+      { day: 4, title: "Deploy", read: "Vercel docs", task: "Push pe GitHub (repo public). Deploy pe Vercel. Configurează env variables. Testează TOATE fluxurile în producție. Fixează orice bug găsit în producție." },
+      { day: 5, title: "README complet", read: "Fără lectură", task: "Scrie README: 1) Ce face produsul (2-3 fraze). 2) Tech stack cu justificare. 3) Arhitectura AI. 4) Cum rulezi local. 5) Eval results. Adaugă screenshots." },
+      { day: 6, title: "Demo video", read: "Fără lectură", task: "Înregistrează maxim 3 minute cu Loom: 30 sec problemă, 1 min demo live, 30 sec arhitectură (arată codul), 30 sec eval results. Nu reînregistra mai mult de 3 ori." },
+      { day: 7, title: "CHECKPOINT", read: "—", task: "CHECKPOINT: Timer 10 minute. Prezintă proiectul ca la un interviu: problemă → soluție → arhitectură → demo live → eval results → ce ai face diferit. Înregistrează și ascultă-te." },
+    ],
+    checkpoint: "Proiect live, documentat pe GitHub, demo video gata, prezentare sub 10 minute."
+  },
+  {
+    week: 24, phase: 4, phaseTitle: "AI Engineer Ready", color: "#FF4D6D",
+    topic: "Interview Prep",
+    resource: "Designing ML Systems — Chip Huyen (cumpără cartea)",
+    resourceUrl: "https://www.oreilly.com/library/view/designing-machine-learning/9781098107963/",
+    days: [
+      { day: 1, title: "Designing ML Systems cap. 1–2", read: "Chip Huyen cap. 1–2", task: "Citește cu notițe active. Pentru fiecare concept: cum se aplică la ECapturo? Notează în GoodNotes." },
+      { day: 2, title: "Designing ML Systems cap. 3–4", read: "Chip Huyen cap. 3–4", task: "Citește. Scrie un system design de 1 pagină pentru ECapturo ca și cum l-ai prezenta la interviu." },
+      { day: 3, title: "Mock interview — conceptual", read: "Fără lectură", task: "Deschide o conversație nouă cu Claude: 'Ești interviewer AI engineer. Pune-mi 10 întrebări despre RAG, evals, hallucinations, fine-tuning vs prompting. Evaluează fiecare răspuns.' Răspunde fără să cauți." },
+      { day: 4, title: "Mock interview — system design", read: "Fără lectură", task: "Prompt Claude: 'Dă-mi o problemă de system design AI: extracție automată din 10.000 facturi/zi.' Ai 45 minute să proiectezi. Desenează pe hârtie. Prezintă lui Claude. Cere feedback." },
+      { day: 5, title: "Mock interview — coding", read: "Fără lectură", task: "Prompt Claude: 'Dă-mi 5 exerciții coding pentru AI Engineer junior: Python, string manipulation, API calls, JSON parsing, algoritmi simpli.' Rezolvă fiecare în 15 min maxim." },
+      { day: 6, title: "Designing ML Systems cap. 5–8", read: "Chip Huyen cap. 5–8", task: "Citește. Focus pe: feature engineering, deployment, monitoring. Scrie 10 întrebări pe care le-ai putea primi la interviu din aceste capitole." },
+      { day: 7, title: "CHECKPOINT", read: "—", task: "CHECKPOINT: Rulează din nou mock interview-ul de la Zi 3. Compară cu prima dată — ce s-a îmbunătățit? Ce mai trebuie lucrat?" },
+    ],
+    checkpoint: "Răspunzi fluent la întrebări despre RAG, evals, hallucinations, system design AI."
+  },
+  {
+    week: 25, phase: 4, phaseTitle: "AI Engineer Ready", color: "#FF4D6D",
+    topic: "CV, LinkedIn & Aplicări",
+    resource: "Profilul tău existent",
+    resourceUrl: null,
+    days: [
+      { day: 1, title: "CV actualizat", read: "CV-ul tău actual", task: "Pentru fiecare proiect adaugă metrici: 'Eval accuracy 87% pe 200 facturi', 'RAG cu latency < 2s', 'Reduce costul API cu 40% prin prompt caching'. Headline: 'QA Automation | AI Engineer'." },
+      { day: 2, title: "LinkedIn actualizat", read: "Profilul LinkedIn", task: "Headline: 'QA Automation Engineer → AI Engineer | Building AI-powered SaaS'. About: 3 paragrafe — cine ești, ce construiești, ce cauți. Projects: ECapturo cu demo link și tech stack." },
+      { day: 3, title: "Lansare publică", read: "Fără lectură", task: "Verifică că ECapturo e live și funcțional. Scrie post LinkedIn: problema rezolvată + demo video + link. Postează. Scopul nu e viral — e să ai ceva concret de arătat la interviu." },
+      { day: 4, title: "Aplicări batch 1", read: "LinkedIn + remote.co", task: "Caută: 'AI Engineer', 'LLM Engineer', 'AI Developer', 'QA + AI'. Aplică la 5 roluri. Pentru fiecare customizează paragraful de intro — menționează proiectul relevant pentru ei. Trackează într-un spreadsheet." },
+      { day: 5, title: "Aplicări batch 2", read: "LinkedIn + remote.co", task: "Aplică la încă 5 roluri. Total: 10 aplicări. Adaugă în spreadsheet: companie, rol, dată, status." },
+      { day: 6, title: "Follow-up & networking", read: "Fără lectură", task: "Cere 2-3 recomandări LinkedIn de la colegi care îți cunosc munca. Conectează-te cu 5 AI Engineers pe LinkedIn. Comentează la 3 posturi relevante din domeniu." },
+      { day: 7, title: "CHECKPOINT FINAL", read: "—", task: "CHECKPOINT FINAL: Numără interviurile programate — trebuie să fie minimum 3. Dacă nu: analizează CV-ul și aplicările — unde e problema? Continuă cu aplicări săptămânal." },
+    ],
+    checkpoint: "Minimum 3 interviuri tehnice programate. CV și LinkedIn actualizate cu metrici reale."
+  },
 ];
 
-export default function LearningPlan() {
-  const [activePhase, setActivePhase] = useState(1);
-  const [expandedModule, setExpandedModule] = useState(null);
-  const [completedTodos, setCompletedTodos] = useState({});
+// ─── COMPONENT ────────────────────────────────────────────────────────────────
 
-  const phase = phases.find(p => p.id === activePhase);
+const PHASE_COLORS = { 1: "#F5C518", 2: "#00C896", 3: "#7B61FF", 4: "#FF4D6D" };
+const PHASE_NAMES = { 1: "JS Solid", 2: "Full Stack", 3: "AI Foundations", 4: "AI Engineer" };
 
-  const getTodoStats = (module) => {
-    const total = module.todos.length;
-    const done = module.todos.filter(t => completedTodos[t.id]).length;
-    return { total, done, pct: Math.round((done / total) * 100) };
-  };
+export default function Roadmap() {
+  const [currentWeek, setCurrentWeek] = useState(1);
+  const [completedDays, setCompletedDays] = useState({});
+  const [expandedDay, setExpandedDay] = useState(null);
 
-  const getPhaseStats = (ph) => {
-    const total = ph.modules.reduce((acc, m) => acc + m.todos.length, 0);
-    const done = ph.modules.reduce((acc, m) => acc + m.todos.filter(t => completedTodos[t.id]).length, 0);
-    return { total, done, pct: Math.round((done / total) * 100) };
-  };
+  const weekData = weeks.find(w => w.week === currentWeek);
+  const color = weekData?.color || "#F5C518";
+  const totalDays = 25 * 7;
+  const doneDays = Object.keys(completedDays).length;
+  const globalPct = Math.round((doneDays / totalDays) * 100);
 
-  const globalStats = phases.reduce((acc, ph) => {
-    const s = getPhaseStats(ph);
-    return { total: acc.total + s.total, done: acc.done + s.done };
-  }, { total: 0, done: 0 });
-
-  const toggleTodo = (id) => {
-    setCompletedTodos(prev => {
+  const toggleDay = (key) => {
+    setCompletedDays(prev => {
       const next = { ...prev };
-      if (next[id]) delete next[id]; else next[id] = true;
+      if (next[key]) delete next[key]; else next[key] = true;
       return next;
     });
   };
 
-  const toggleModule = (id) => {
-    setExpandedModule(expandedModule === id ? null : id);
-  };
+  const weekDone = weekData?.days.filter(d => completedDays[`${currentWeek}-${d.day}`]).length || 0;
+  const isCheckpoint = (day) => day.day === 7;
 
   return (
     <div style={{
       minHeight: "100vh",
-      background: "#080808",
-      fontFamily: "'IBM Plex Mono', monospace",
-      color: "#D4D4D4",
+      background: "#0A0A0A",
+      color: "#E8E8E8",
+      fontFamily: "system-ui, -apple-system, sans-serif",
     }}>
-      {/* Header */}
+
+      {/* ── TOP BAR ── */}
       <div style={{
-        padding: "28px 20px 20px",
-        borderBottom: "1px solid #161616",
+        background: "#111",
+        borderBottom: "1px solid #1E1E1E",
+        padding: "16px 20px",
         position: "sticky",
         top: 0,
-        background: "#080808",
-        zIndex: 10
+        zIndex: 10,
       }}>
-        <div style={{ maxWidth: 700, margin: "0 auto" }}>
-          <div style={{ fontSize: 10, letterSpacing: 4, color: "#444", marginBottom: 6 }}>
-            FULL STACK → AI ENGINEER · 52 SĂP · 1.5–2H/ZI
-          </div>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 12 }}>
-            <div style={{ fontSize: 22, fontWeight: 700, color: "#fff" }}>Plan de Învățare</div>
+        <div style={{ maxWidth: 680, margin: "0 auto" }}>
+          {/* Progress global */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+            <div style={{ fontSize: 13, color: "#555", fontWeight: 600, letterSpacing: 1 }}>
+              FULL STACK → AI ENGINEER
+            </div>
             <div style={{ fontSize: 13, color: "#555" }}>
-              {globalStats.done}/{globalStats.total} taskuri
+              {doneDays} / {totalDays} zile · {globalPct}%
             </div>
           </div>
-
-          {/* Global progress */}
-          <div style={{ height: 2, background: "#161616", borderRadius: 2, marginBottom: 16 }}>
-            <div style={{
-              height: "100%",
-              width: `${Math.round((globalStats.done / globalStats.total) * 100)}%`,
-              background: phase.color,
-              borderRadius: 2,
-              transition: "width 0.3s"
-            }} />
+          <div style={{ height: 3, background: "#1E1E1E", borderRadius: 2, marginBottom: 16 }}>
+            <div style={{ height: "100%", width: `${globalPct}%`, background: color, borderRadius: 2, transition: "width 0.3s" }} />
           </div>
 
-          {/* Phase tabs */}
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-            {phases.map(p => {
-              const s = getPhaseStats(p);
-              const active = activePhase === p.id;
-              return (
-                <button key={p.id} onClick={() => setActivePhase(p.id)} style={{
-                  padding: "7px 14px",
-                  borderRadius: 3,
-                  border: `1px solid ${active ? p.color : "#1E1E1E"}`,
-                  background: active ? p.color : "transparent",
-                  color: active ? p.textColor : "#555",
-                  fontSize: 12,
-                  fontFamily: "inherit",
-                  cursor: "pointer",
-                  letterSpacing: 1,
-                  fontWeight: 600,
-                  transition: "all 0.15s"
+          {/* Week selector */}
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <button
+              onClick={() => setCurrentWeek(w => Math.max(1, w - 1))}
+              disabled={currentWeek === 1}
+              style={{
+                width: 36, height: 36, borderRadius: 6,
+                border: "1px solid #222", background: "transparent",
+                color: currentWeek === 1 ? "#333" : "#888",
+                fontSize: 18, cursor: currentWeek === 1 ? "default" : "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center"
+              }}
+            >‹</button>
+
+            <div style={{ flex: 1, textAlign: "center" }}>
+              <div style={{ fontSize: 22, fontWeight: 700, color: "#fff", marginBottom: 2 }}>
+                Săptămâna {currentWeek}
+                <span style={{
+                  marginLeft: 10, fontSize: 12, fontWeight: 600,
+                  color: color, background: color + "22",
+                  padding: "2px 8px", borderRadius: 4
                 }}>
-                  {String(p.id).padStart(2, "0")} · {p.title.toUpperCase()}
-                  {s.done > 0 && <span style={{ marginLeft: 6, opacity: 0.7 }}>({s.pct}%)</span>}
-                </button>
-              );
-            })}
+                  {PHASE_NAMES[weekData?.phase]}
+                </span>
+              </div>
+              <div style={{ fontSize: 15, color: "#666" }}>{weekData?.topic}</div>
+            </div>
+
+            <button
+              onClick={() => setCurrentWeek(w => Math.min(25, w + 1))}
+              disabled={currentWeek === 25}
+              style={{
+                width: 36, height: 36, borderRadius: 6,
+                border: "1px solid #222", background: "transparent",
+                color: currentWeek === 25 ? "#333" : "#888",
+                fontSize: 18, cursor: currentWeek === 25 ? "default" : "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center"
+              }}
+            >›</button>
           </div>
         </div>
       </div>
 
-      {/* Phase body */}
-      <div style={{ maxWidth: 700, margin: "0 auto", padding: "24px 20px 60px" }}>
-        {/* Phase goal */}
+      {/* ── WEEK CONTENT ── */}
+      <div style={{ maxWidth: 680, margin: "0 auto", padding: "24px 20px 80px" }}>
+
+        {/* Resource */}
         <div style={{
-          borderLeft: `2px solid ${phase.color}`,
-          paddingLeft: 14,
-          marginBottom: 24
+          padding: "12px 16px",
+          background: "#111",
+          border: `1px solid ${color}33`,
+          borderRadius: 8,
+          marginBottom: 20,
+          display: "flex",
+          alignItems: "center",
+          gap: 10
         }}>
-          <div style={{ fontSize: 11, color: phase.color, letterSpacing: 3, marginBottom: 3 }}>
-            FAZA {phase.id} · SĂP. {phase.weeks}
+          <span style={{ fontSize: 18 }}>📚</span>
+          <div>
+            <div style={{ fontSize: 11, color: "#555", letterSpacing: 1, marginBottom: 2 }}>RESURSĂ SĂPTĂMÂNA ASTA</div>
+            {weekData?.resourceUrl ? (
+              <a href={weekData.resourceUrl} target="_blank" rel="noopener noreferrer"
+                style={{ fontSize: 15, color: color, textDecoration: "none", fontWeight: 500 }}>
+                {weekData?.resource} ↗
+              </a>
+            ) : (
+              <div style={{ fontSize: 15, color: "#888", fontWeight: 500 }}>{weekData?.resource}</div>
+            )}
           </div>
-          <div style={{ fontSize: 20, fontWeight: 700, color: "#fff", marginBottom: 2 }}>{phase.title}</div>
-          <div style={{ fontSize: 14, color: "#555", marginBottom: 10 }}>{phase.subtitle}</div>
-          <div style={{ fontSize: 14, color: "#888", lineHeight: 1.6 }}>🎯 {phase.goal}</div>
         </div>
 
-        {/* Modules */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          {phase.modules.map(mod => {
-            const stats = getTodoStats(mod);
-            const isOpen = expandedModule === mod.id;
-            const isComplete = stats.done === stats.total;
+        {/* Progress săptămână */}
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#555", marginBottom: 8 }}>
+          <span>Progres săptămână</span>
+          <span style={{ color: weekDone === 7 ? color : "#555" }}>{weekDone}/7 zile</span>
+        </div>
+        <div style={{ height: 4, background: "#1A1A1A", borderRadius: 2, marginBottom: 24 }}>
+          <div style={{ height: "100%", width: `${(weekDone / 7) * 100}%`, background: color, borderRadius: 2, transition: "width 0.3s" }} />
+        </div>
+
+        {/* Day cards */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {weekData?.days.map(day => {
+            const key = `${currentWeek}-${day.day}`;
+            const done = !!completedDays[key];
+            const isOpen = expandedDay === key;
+            const checkpoint = isCheckpoint(day);
 
             return (
-              <div key={mod.id} style={{
-                border: `1px solid ${isComplete ? phase.color + "55" : isOpen ? "#252525" : "#141414"}`,
-                borderRadius: 6,
-                background: isComplete ? phase.color + "06" : "#0E0E0E",
+              <div key={key} style={{
+                borderRadius: 10,
+                border: `1px solid ${done ? color + "55" : checkpoint ? color + "33" : "#1E1E1E"}`,
+                background: done ? color + "08" : checkpoint ? "#111" : "#0E0E0E",
                 overflow: "hidden",
                 transition: "border-color 0.2s"
               }}>
-                {/* Module header */}
+                {/* Card header — always visible */}
                 <div
-                  onClick={() => toggleModule(mod.id)}
+                  onClick={() => setExpandedDay(isOpen ? null : key)}
                   style={{
-                    padding: "12px 14px",
+                    padding: "16px 18px",
                     cursor: "pointer",
                     display: "flex",
                     alignItems: "center",
-                    gap: 12
+                    gap: 14
                   }}
                 >
-                  {/* Progress ring (simple) */}
-                  <div style={{
-                    width: 32,
-                    height: 32,
-                    borderRadius: "50%",
-                    border: `2px solid ${isComplete ? phase.color : "#222"}`,
-                    background: isComplete ? phase.color + "22" : "transparent",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: 10,
-                    color: isComplete ? phase.color : "#444",
-                    flexShrink: 0,
-                    fontWeight: 700
-                  }}>
-                    {isComplete ? "✓" : `${stats.done}`}
+                  {/* Checkbox */}
+                  <div
+                    onClick={(e) => { e.stopPropagation(); toggleDay(key); }}
+                    style={{
+                      width: 24, height: 24, borderRadius: 5, flexShrink: 0,
+                      border: `2px solid ${done ? color : "#2E2E2E"}`,
+                      background: done ? color : "transparent",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: 13, color: "#000", cursor: "pointer",
+                      transition: "all 0.15s"
+                    }}
+                  >
+                    {done ? "✓" : ""}
                   </div>
 
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 11, color: "#444", letterSpacing: 2, marginBottom: 2 }}>
-                      SĂP. {mod.week}
+                    {/* Day label */}
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
+                      <span style={{
+                        fontSize: 12, fontWeight: 700,
+                        color: checkpoint ? color : "#555",
+                        letterSpacing: 0.5
+                      }}>
+                        {checkpoint ? "🏁 ZI 7 — CHECKPOINT" : `ZI ${day.day}`}
+                      </span>
                     </div>
+                    {/* Title */}
                     <div style={{
-                      fontSize: 16,
-                      fontWeight: 600,
-                      color: isComplete ? "#555" : "#E0E0E0",
-                      textDecoration: isComplete ? "line-through" : "none",
+                      fontSize: 17, fontWeight: 600,
+                      color: done ? "#555" : "#E8E8E8",
+                      textDecoration: done ? "line-through" : "none",
                       lineHeight: 1.3
                     }}>
-                      {mod.topic}
+                      {day.title}
                     </div>
-                    {/* Mini progress bar */}
-                    <div style={{ height: 2, background: "#1A1A1A", borderRadius: 1, marginTop: 6, width: "100%" }}>
-                      <div style={{
-                        height: "100%",
-                        width: `${stats.pct}%`,
-                        background: phase.color,
-                        borderRadius: 1,
-                        transition: "width 0.3s"
-                      }} />
-                    </div>
+                    {/* Read hint */}
+                    {day.read && day.read !== "—" && !isOpen && (
+                      <div style={{ fontSize: 13, color: "#444", marginTop: 3 }}>
+                        📖 {day.read}
+                      </div>
+                    )}
                   </div>
 
                   <div style={{
-                    fontSize: 11,
-                    color: "#333",
+                    fontSize: 18, color: "#333",
                     transform: isOpen ? "rotate(180deg)" : "none",
-                    transition: "transform 0.2s",
-                    flexShrink: 0
+                    transition: "transform 0.2s", flexShrink: 0
                   }}>▾</div>
                 </div>
 
-                {/* Expanded */}
+                {/* Expanded task */}
                 {isOpen && (
-                  <div style={{ borderTop: "1px solid #141414" }}>
-                    {/* Resources */}
-                    <div style={{ padding: "12px 14px", borderBottom: "1px solid #141414" }}>
-                      {mod.books.length > 0 && (
-                        <div style={{ marginBottom: 10 }}>
-                          <div style={{ fontSize: 11, color: "#444", letterSpacing: 3, marginBottom: 6 }}>📚 CĂRȚI</div>
-                          {mod.books.map((b, i) => (
-                            <div key={i} style={{ fontSize: 13, color: "#666", marginBottom: 3, paddingLeft: 8, borderLeft: `1px solid ${phase.color}55` }}>
-                              {b}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                      <div>
-                        <div style={{ fontSize: 11, color: "#444", letterSpacing: 3, marginBottom: 6 }}>🌐 ONLINE</div>
-                        {mod.onlineUrl ? (
-                          <a href={mod.onlineUrl} target="_blank" rel="noopener noreferrer" style={{
-                            fontSize: 13, color: phase.color, textDecoration: "none"
-                          }}>
-                            {mod.online} ↗
-                          </a>
-                        ) : (
-                          <div style={{ fontSize: 13, color: "#666" }}>{mod.online}</div>
-                        )}
+                  <div style={{ borderTop: `1px solid #1A1A1A`, padding: "16px 18px" }}>
+                    {day.read && day.read !== "—" && (
+                      <div style={{ marginBottom: 14 }}>
+                        <div style={{ fontSize: 12, color: "#444", letterSpacing: 1, marginBottom: 6 }}>📖 CITEȘTE AZI</div>
+                        <div style={{ fontSize: 15, color: "#888" }}>{day.read}</div>
                       </div>
-                    </div>
-
-                    {/* To-do list */}
-                    <div style={{ padding: "12px 14px" }}>
-                      <div style={{ fontSize: 11, color: "#444", letterSpacing: 3, marginBottom: 10 }}>
-                        ✅ TO-DO — {stats.done}/{stats.total} completate
+                    )}
+                    <div>
+                      <div style={{ fontSize: 12, color: "#444", letterSpacing: 1, marginBottom: 8 }}>
+                        {checkpoint ? "🏁 CHECKPOINT" : "🔨 EXERCIȚIU"}
                       </div>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                        {mod.todos.map(todo => {
-                          const done = !!completedTodos[todo.id];
-                          return (
-                            <div
-                              key={todo.id}
-                              onClick={() => toggleTodo(todo.id)}
-                              style={{
-                                display: "flex",
-                                gap: 10,
-                                alignItems: "flex-start",
-                                cursor: "pointer",
-                                padding: "7px 10px",
-                                borderRadius: 4,
-                                background: done ? phase.color + "0A" : "#111",
-                                border: `1px solid ${done ? phase.color + "33" : "#181818"}`,
-                                transition: "all 0.15s"
-                              }}
-                            >
-                              <div style={{
-                                width: 18,
-                                height: 18,
-                                borderRadius: 3,
-                                border: `1.5px solid ${done ? phase.color : "#2E2E2E"}`,
-                                background: done ? phase.color : "transparent",
-                                flexShrink: 0,
-                                marginTop: 2,
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                fontSize: 11,
-                                color: phase.textColor,
-                                transition: "all 0.15s"
-                              }}>
-                                {done ? "✓" : ""}
-                              </div>
-                              <div style={{ flex: 1 }}>
-                                <div style={{ fontSize: 11, color: "#444", marginBottom: 2, letterSpacing: 1 }}>
-                                  {todo.day.toUpperCase()}
-                                </div>
-                                <div style={{
-                                  fontSize: 14,
-                                  color: done ? "#444" : "#AAA",
-                                  textDecoration: done ? "line-through" : "none",
-                                  lineHeight: 1.6
-                                }}>
-                                  {todo.text}
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-
-                      {/* Checkpoint */}
                       <div style={{
-                        marginTop: 14,
-                        padding: "12px 14px",
+                        fontSize: 16, color: "#D0D0D0", lineHeight: 1.8,
+                        padding: "14px 16px",
                         background: "#080808",
-                        borderRadius: 4,
-                        borderLeft: `2px solid ${phase.color}`,
-                        fontSize: 14,
-                        color: "#666",
-                        fontStyle: "italic",
-                        lineHeight: 1.7
+                        borderRadius: 8,
+                        borderLeft: `3px solid ${color}`
                       }}>
-                        🏁 <strong style={{ color: "#888", fontStyle: "normal" }}>Checkpoint:</strong> "{mod.checkpoint}"
+                        {day.task}
                       </div>
                     </div>
+                    <button
+                      onClick={() => toggleDay(key)}
+                      style={{
+                        marginTop: 14, padding: "10px 20px",
+                        borderRadius: 6, border: `1px solid ${done ? "#222" : color}`,
+                        background: done ? "transparent" : color,
+                        color: done ? "#555" : "#000",
+                        fontSize: 14, fontWeight: 600, cursor: "pointer",
+                        fontFamily: "inherit"
+                      }}
+                    >
+                      {done ? "Marchează ca neterminat" : "✓ Am terminat ziua asta"}
+                    </button>
                   </div>
                 )}
               </div>
@@ -689,16 +670,44 @@ export default function LearningPlan() {
           })}
         </div>
 
-        <div style={{
-          marginTop: 32,
-          padding: "14px",
-          border: "1px solid #141414",
-          borderRadius: 6,
-          fontSize: 13,
-          color: "#3A3A3A",
-          lineHeight: 1.7
-        }}>
-          Regula de aur: nu treci la modulul următor până nu bifezi checkpoint-ul. Consistent 1.5h/zi bate 6h/weekend în orice zi a săptămânii.
+        {/* Checkpoint banner */}
+        {weekData?.checkpoint && (
+          <div style={{
+            marginTop: 20,
+            padding: "14px 18px",
+            background: "#111",
+            borderRadius: 8,
+            border: `1px solid ${color}33`
+          }}>
+            <div style={{ fontSize: 12, color: "#555", letterSpacing: 1, marginBottom: 6 }}>
+              🏁 CHECKPOINT SĂPTĂMÂNA {currentWeek}
+            </div>
+            <div style={{ fontSize: 15, color: "#888", lineHeight: 1.6 }}>
+              {weekData.checkpoint}
+            </div>
+          </div>
+        )}
+
+        {/* Week nav bottom */}
+        <div style={{ display: "flex", gap: 12, marginTop: 28 }}>
+          {currentWeek > 1 && (
+            <button onClick={() => setCurrentWeek(w => w - 1)} style={{
+              flex: 1, padding: "13px", borderRadius: 8,
+              border: "1px solid #222", background: "transparent",
+              color: "#666", fontSize: 15, cursor: "pointer", fontFamily: "inherit"
+            }}>
+              ← Săptămâna {currentWeek - 1}
+            </button>
+          )}
+          {currentWeek < 25 && (
+            <button onClick={() => setCurrentWeek(w => w + 1)} style={{
+              flex: 1, padding: "13px", borderRadius: 8,
+              border: `1px solid ${color}`, background: "transparent",
+              color: color, fontSize: 15, cursor: "pointer", fontWeight: 600, fontFamily: "inherit"
+            }}>
+              Săptămâna {currentWeek + 1} →
+            </button>
+          )}
         </div>
       </div>
     </div>
