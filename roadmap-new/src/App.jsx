@@ -425,31 +425,23 @@ export default function Roadmap() {
 
   // Load saved progress on mount
   useEffect(() => {
-    async function load() {
-      try {
-        const result = await window.storage.get("roadmap-progress");
-        if (result?.value) {
-          const saved = JSON.parse(result.value);
-          if (saved.completedDays) setCompletedDays(saved.completedDays);
-          if (saved.currentWeek) setCurrentWeek(saved.currentWeek);
-        }
-      } catch (e) {
-        // No saved data yet
+    try {
+      const saved = localStorage.getItem("roadmap-progress");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.completedDays) setCompletedDays(parsed.completedDays);
+        if (parsed.currentWeek) setCurrentWeek(parsed.currentWeek);
       }
-      setLoaded(true);
-    }
-    load();
+    } catch (e) {}
+    setLoaded(true);
   }, []);
 
   // Save progress whenever it changes
   useEffect(() => {
     if (!loaded) return;
-    async function save() {
-      try {
-        await window.storage.set("roadmap-progress", JSON.stringify({ completedDays, currentWeek }));
-      } catch (e) {}
-    }
-    save();
+    try {
+      localStorage.setItem("roadmap-progress", JSON.stringify({ completedDays, currentWeek }));
+    } catch (e) {}
   }, [completedDays, currentWeek, loaded]);
 
   const weekData = weeks.find(w => w.week === currentWeek);
