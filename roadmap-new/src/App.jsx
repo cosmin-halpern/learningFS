@@ -421,6 +421,37 @@ export default function Roadmap() {
   const [currentWeek, setCurrentWeek] = useState(1);
   const [completedDays, setCompletedDays] = useState({});
   const [expandedDay, setExpandedDay] = useState(null);
+  const [loaded, setLoaded] = useState(false);
+
+  // Load saved progress on mount
+  const { useEffect } = require("react");
+  useEffect(() => {
+    async function load() {
+      try {
+        const result = await window.storage.get("roadmap-progress");
+        if (result?.value) {
+          const saved = JSON.parse(result.value);
+          if (saved.completedDays) setCompletedDays(saved.completedDays);
+          if (saved.currentWeek) setCurrentWeek(saved.currentWeek);
+        }
+      } catch (e) {
+        // No saved data yet
+      }
+      setLoaded(true);
+    }
+    load();
+  }, []);
+
+  // Save progress whenever it changes
+  useEffect(() => {
+    if (!loaded) return;
+    async function save() {
+      try {
+        await window.storage.set("roadmap-progress", JSON.stringify({ completedDays, currentWeek }));
+      } catch (e) {}
+    }
+    save();
+  }, [completedDays, currentWeek, loaded]);
 
   const weekData = weeks.find(w => w.week === currentWeek);
   const color = weekData?.color || "#F5C518";
@@ -439,6 +470,14 @@ export default function Roadmap() {
   const weekDone = weekData?.days.filter(d => completedDays[`${currentWeek}-${d.day}`]).length || 0;
   const isCheckpoint = (day) => day.day === 7;
 
+  if (!loaded) {
+    return (
+      <div style={{ minHeight: "100vh", background: "#0A0A0A", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ color: "#555", fontSize: 16 }}>Se încarcă progresul...</div>
+      </div>
+    );
+  }
+
   return (
     <div style={{
       minHeight: "100vh",
@@ -451,12 +490,12 @@ export default function Roadmap() {
       <div style={{
         background: "#111",
         borderBottom: "1px solid #1E1E1E",
-        padding: "16px 20px",
+        padding: "16px 32px",
         position: "sticky",
         top: 0,
         zIndex: 10,
       }}>
-        <div style={{ maxWidth: 680, margin: "0 auto" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto" }}>
           {/* Progress global */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
             <div style={{ fontSize: 13, color: "#555", fontWeight: 600, letterSpacing: 1 }}>
@@ -514,7 +553,7 @@ export default function Roadmap() {
       </div>
 
       {/* ── WEEK CONTENT ── */}
-      <div style={{ maxWidth: 680, margin: "0 auto", padding: "24px 20px 80px" }}>
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: "28px 32px 80px" }}>
 
         {/* Resource */}
         <div style={{
@@ -551,7 +590,11 @@ export default function Roadmap() {
         </div>
 
         {/* Day cards */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(380px, 1fr))",
+          gap: 12
+        }}>
           {weekData?.days.map(day => {
             const key = `${currentWeek}-${day.day}`;
             const done = !!completedDays[key];
