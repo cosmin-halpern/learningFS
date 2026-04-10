@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // ─── DATA ────────────────────────────────────────────────────────────────────
 
@@ -424,7 +424,6 @@ export default function Roadmap() {
   const [loaded, setLoaded] = useState(false);
 
   // Load saved progress on mount
-  const { useEffect } = require("react");
   useEffect(() => {
     async function load() {
       try {
