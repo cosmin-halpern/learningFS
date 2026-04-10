@@ -479,12 +479,12 @@ export default function Roadmap() {
 
   return (
     <div style={{
-      minHeight: "100vh",
-      width: "100%",
+      position: "fixed",
+      top: 0, left: 0, right: 0, bottom: 0,
+      overflowY: "auto",
       background: "#0A0A0A",
       color: "#E8E8E8",
       fontFamily: "system-ui, -apple-system, sans-serif",
-      boxSizing: "border-box",
     }}>
 
       {/* ── TOP BAR ── */}
@@ -495,8 +495,6 @@ export default function Roadmap() {
         position: "sticky",
         top: 0,
         zIndex: 10,
-        width: "100%",
-        boxSizing: "border-box",
       }}>
         <div style={{ width: "100%" }}>
           {/* Progress global */}
@@ -556,7 +554,7 @@ export default function Roadmap() {
       </div>
 
       {/* ── WEEK CONTENT ── */}
-      <div style={{ width: "100%", padding: "28px 40px 80px", boxSizing: "border-box" }}>
+      <div style={{ padding: "28px 40px 80px" }}>
 
         {/* Resource */}
         <div style={{
