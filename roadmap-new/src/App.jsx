@@ -422,6 +422,8 @@ export default function Roadmap() {
   const [completedDays, setCompletedDays] = useState({});
   const [expandedDay, setExpandedDay] = useState(null);
   const [loaded, setLoaded] = useState(false);
+  const [activeTab, setActiveTab] = useState("roadmap");
+  const [expandedExWeek, setExpandedExWeek] = useState(null);
 
   // Load saved progress on mount
   useEffect(() => {
@@ -483,7 +485,7 @@ export default function Roadmap() {
       <div style={{
         background: "#111",
         borderBottom: "1px solid #1E1E1E",
-        padding: "16px 40px",
+        padding: "16px 40px 0",
         position: "sticky",
         top: 0,
         zIndex: 10,
@@ -501,251 +503,152 @@ export default function Roadmap() {
           <div style={{ height: 3, background: "#1E1E1E", borderRadius: 2, marginBottom: 16 }}>
             <div style={{ height: "100%", width: `${globalPct}%`, background: color, borderRadius: 2, transition: "width 0.3s" }} />
           </div>
-
-          {/* Week selector */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <button
-              onClick={() => setCurrentWeek(w => Math.max(1, w - 1))}
-              disabled={currentWeek === 1}
-              style={{
-                width: 36, height: 36, borderRadius: 6,
-                border: "1px solid #222", background: "transparent",
-                color: currentWeek === 1 ? "#333" : "#888",
-                fontSize: 18, cursor: currentWeek === 1 ? "default" : "pointer",
-                display: "flex", alignItems: "center", justifyContent: "center"
-              }}
-            >‹</button>
-
-            <div style={{ flex: 1, textAlign: "center" }}>
-              <div style={{ fontSize: 22, fontWeight: 700, color: "#fff", marginBottom: 2 }}>
-                Săptămâna {currentWeek}
-                <span style={{
-                  marginLeft: 10, fontSize: 12, fontWeight: 600,
-                  color: color, background: color + "22",
-                  padding: "2px 8px", borderRadius: 4
-                }}>
-                  {PHASE_NAMES[weekData?.phase]}
-                </span>
-              </div>
-              <div style={{ fontSize: 15, color: "#666" }}>{weekData?.topic}</div>
-            </div>
-
-            <button
-              onClick={() => setCurrentWeek(w => Math.min(25, w + 1))}
-              disabled={currentWeek === 25}
-              style={{
-                width: 36, height: 36, borderRadius: 6,
-                border: "1px solid #222", background: "transparent",
-                color: currentWeek === 25 ? "#333" : "#888",
-                fontSize: 18, cursor: currentWeek === 25 ? "default" : "pointer",
-                display: "flex", alignItems: "center", justifyContent: "center"
-              }}
-            >›</button>
+          {/* Tabs */}
+          <div style={{ display: "flex", gap: 0, borderBottom: "none" }}>
+            {["roadmap", "exercitii"].map(tab => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                style={{
+                  padding: "10px 24px",
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: activeTab === tab ? `2px solid ${color}` : "2px solid transparent",
+                  color: activeTab === tab ? "#fff" : "#555",
+                  fontSize: 14,
+                  fontWeight: activeTab === tab ? 700 : 400,
+                  cursor: "pointer",
+                  fontFamily: "inherit",
+                  letterSpacing: 0.5,
+                  transition: "all 0.15s",
+                }}
+              >
+                {tab === "roadmap" ? "📅 Roadmap" : "🔨 Exerciții"}
+              </button>
+            ))}
           </div>
         </div>
       </div>
+      {/* ── CONTENT ── */}
+      {activeTab === "roadmap" ? (
+        <div style={{ padding: "28px 40px 80px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
+            <button onClick={() => setCurrentWeek(w => Math.max(1, w - 1))} disabled={currentWeek === 1} style={{ width: 40, height: 40, borderRadius: 8, border: "1px solid #222", background: "transparent", color: currentWeek === 1 ? "#333" : "#888", fontSize: 20, cursor: currentWeek === 1 ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>‹</button>
+            <div style={{ flex: 1, textAlign: "center" }}>
+              <div style={{ fontSize: 24, fontWeight: 700, color: "#fff", marginBottom: 4 }}>
+                Săptămâna {currentWeek}
+                <span style={{ marginLeft: 10, fontSize: 13, fontWeight: 600, color: color, background: color + "22", padding: "3px 10px", borderRadius: 4 }}>{PHASE_NAMES[weekData?.phase]}</span>
+              </div>
+              <div style={{ fontSize: 15, color: "#666" }}>{weekData?.topic}</div>
+            </div>
+            <button onClick={() => setCurrentWeek(w => Math.min(25, w + 1))} disabled={currentWeek === 25} style={{ width: 40, height: 40, borderRadius: 8, border: "1px solid #222", background: "transparent", color: currentWeek === 25 ? "#333" : "#888", fontSize: 20, cursor: currentWeek === 25 ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>›</button>
+          </div>
 
-      {/* ── WEEK CONTENT ── */}
-      <div style={{ padding: "28px 40px 80px" }}>
+          <div style={{ padding: "14px 18px", background: "#111", border: `1px solid ${color}33`, borderRadius: 10, marginBottom: 20, display: "flex", alignItems: "center", gap: 12 }}>
+            <span style={{ fontSize: 20 }}>📚</span>
+            <div>
+              <div style={{ fontSize: 11, color: "#555", letterSpacing: 1, marginBottom: 3 }}>RESURSĂ SĂPTĂMÂNA ASTA</div>
+              {weekData?.resourceUrl ? (
+                <a href={weekData.resourceUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: 16, color: color, textDecoration: "none", fontWeight: 500 }}>{weekData?.resource} ↗</a>
+              ) : (
+                <div style={{ fontSize: 16, color: "#888", fontWeight: 500 }}>{weekData?.resource}</div>
+              )}
+            </div>
+          </div>
 
-        {/* Resource */}
-        <div style={{
-          padding: "12px 16px",
-          background: "#111",
-          border: `1px solid ${color}33`,
-          borderRadius: 8,
-          marginBottom: 20,
-          display: "flex",
-          alignItems: "center",
-          gap: 10
-        }}>
-          <span style={{ fontSize: 18 }}>📚</span>
-          <div>
-            <div style={{ fontSize: 11, color: "#555", letterSpacing: 1, marginBottom: 2 }}>RESURSĂ SĂPTĂMÂNA ASTA</div>
-            {weekData?.resourceUrl ? (
-              <a href={weekData.resourceUrl} target="_blank" rel="noopener noreferrer"
-                style={{ fontSize: 15, color: color, textDecoration: "none", fontWeight: 500 }}>
-                {weekData?.resource} ↗
-              </a>
-            ) : (
-              <div style={{ fontSize: 15, color: "#888", fontWeight: 500 }}>{weekData?.resource}</div>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14, color: "#555", marginBottom: 8 }}>
+            <span>Progres săptămână</span>
+            <span style={{ color: weekDone === 7 ? color : "#555" }}>{weekDone}/7 zile</span>
+          </div>
+          <div style={{ height: 4, background: "#1A1A1A", borderRadius: 2, marginBottom: 24 }}>
+            <div style={{ height: "100%", width: `${(weekDone / 7) * 100}%`, background: color, borderRadius: 2, transition: "width 0.3s" }} />
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))", gap: 10 }}>
+            {weekData?.days.map(day => {
+              const key = `${currentWeek}-${day.day}`;
+              const done = !!completedDays[key];
+              const checkpoint = day.day === 7;
+              return (
+                <div key={key} onClick={() => toggleDay(key)} style={{ borderRadius: 10, border: `1px solid ${done ? color + "66" : checkpoint ? color + "33" : "#1E1E1E"}`, background: done ? color + "0D" : checkpoint ? "#111" : "#0E0E0E", padding: "16px 18px", cursor: "pointer", display: "flex", alignItems: "center", gap: 14, transition: "all 0.15s", userSelect: "none" }}>
+                  <div style={{ width: 26, height: 26, borderRadius: 6, flexShrink: 0, border: `2px solid ${done ? color : "#2E2E2E"}`, background: done ? color : "transparent", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, color: "#000", transition: "all 0.15s" }}>
+                    {done ? "✓" : ""}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 12, color: checkpoint ? color : "#444", fontWeight: 700, letterSpacing: 0.5, marginBottom: 4 }}>
+                      {checkpoint ? "🏁 CHECKPOINT" : `ZI ${day.day}`}
+                    </div>
+                    <div style={{ fontSize: 17, fontWeight: 600, color: done ? "#555" : "#E8E8E8", textDecoration: done ? "line-through" : "none", lineHeight: 1.3, marginBottom: day.read && day.read !== "—" ? 4 : 0 }}>
+                      {day.title}
+                    </div>
+                    {day.read && day.read !== "—" && (
+                      <div style={{ fontSize: 13, color: "#444" }}>📖 {day.read}</div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {weekData?.checkpoint && (
+            <div style={{ marginTop: 20, padding: "16px 18px", background: "#111", borderRadius: 10, border: `1px solid ${color}33` }}>
+              <div style={{ fontSize: 12, color: "#555", letterSpacing: 1, marginBottom: 6 }}>🏁 CHECKPOINT SĂPTĂMÂNA {currentWeek}</div>
+              <div style={{ fontSize: 16, color: "#888", lineHeight: 1.6 }}>{weekData.checkpoint}</div>
+            </div>
+          )}
+
+          <div style={{ display: "flex", gap: 12, marginTop: 28 }}>
+            {currentWeek > 1 && (
+              <button onClick={() => setCurrentWeek(w => w - 1)} style={{ flex: 1, padding: "14px", borderRadius: 10, border: "1px solid #222", background: "transparent", color: "#666", fontSize: 15, cursor: "pointer", fontFamily: "inherit" }}>← Săptămâna {currentWeek - 1}</button>
+            )}
+            {currentWeek < 25 && (
+              <button onClick={() => setCurrentWeek(w => w + 1)} style={{ flex: 1, padding: "14px", borderRadius: 10, border: `1px solid ${color}`, background: "transparent", color: color, fontSize: 15, cursor: "pointer", fontWeight: 700, fontFamily: "inherit" }}>Săptămâna {currentWeek + 1} →</button>
             )}
           </div>
         </div>
 
-        {/* Progress săptămână */}
-        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#555", marginBottom: 8 }}>
-          <span>Progres săptămână</span>
-          <span style={{ color: weekDone === 7 ? color : "#555" }}>{weekDone}/7 zile</span>
-        </div>
-        <div style={{ height: 4, background: "#1A1A1A", borderRadius: 2, marginBottom: 24 }}>
-          <div style={{ height: "100%", width: `${(weekDone / 7) * 100}%`, background: color, borderRadius: 2, transition: "width 0.3s" }} />
-        </div>
-
-        {/* Day cards */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(380px, 1fr))",
-          gap: 12
-        }}>
-          {weekData?.days.map(day => {
-            const key = `${currentWeek}-${day.day}`;
-            const done = !!completedDays[key];
-            const isOpen = expandedDay === key;
-            const checkpoint = isCheckpoint(day);
-
-            return (
-              <div key={key} style={{
-                borderRadius: 10,
-                border: `1px solid ${done ? color + "55" : checkpoint ? color + "33" : "#1E1E1E"}`,
-                background: done ? color + "08" : checkpoint ? "#111" : "#0E0E0E",
-                overflow: "hidden",
-                transition: "border-color 0.2s"
-              }}>
-                {/* Card header — always visible */}
-                <div
-                  onClick={() => setExpandedDay(isOpen ? null : key)}
-                  style={{
-                    padding: "16px 18px",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 14
-                  }}
-                >
-                  {/* Checkbox */}
-                  <div
-                    onClick={(e) => { e.stopPropagation(); toggleDay(key); }}
-                    style={{
-                      width: 24, height: 24, borderRadius: 5, flexShrink: 0,
-                      border: `2px solid ${done ? color : "#2E2E2E"}`,
-                      background: done ? color : "transparent",
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: 13, color: "#000", cursor: "pointer",
-                      transition: "all 0.15s"
-                    }}
-                  >
-                    {done ? "✓" : ""}
-                  </div>
-
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    {/* Day label */}
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
-                      <span style={{
-                        fontSize: 12, fontWeight: 700,
-                        color: checkpoint ? color : "#555",
-                        letterSpacing: 0.5
-                      }}>
-                        {checkpoint ? "🏁 ZI 7 — CHECKPOINT" : `ZI ${day.day}`}
-                      </span>
-                    </div>
-                    {/* Title */}
-                    <div style={{
-                      fontSize: 17, fontWeight: 600,
-                      color: done ? "#555" : "#E8E8E8",
-                      textDecoration: done ? "line-through" : "none",
-                      lineHeight: 1.3
-                    }}>
-                      {day.title}
-                    </div>
-                    {/* Read hint */}
-                    {day.read && day.read !== "—" && !isOpen && (
-                      <div style={{ fontSize: 13, color: "#444", marginTop: 3 }}>
-                        📖 {day.read}
-                      </div>
-                    )}
-                  </div>
-
-                  <div style={{
-                    fontSize: 18, color: "#333",
-                    transform: isOpen ? "rotate(180deg)" : "none",
-                    transition: "transform 0.2s", flexShrink: 0
-                  }}>▾</div>
-                </div>
-
-                {/* Expanded task */}
-                {isOpen && (
-                  <div style={{ borderTop: `1px solid #1A1A1A`, padding: "16px 18px" }}>
-                    {day.read && day.read !== "—" && (
-                      <div style={{ marginBottom: 14 }}>
-                        <div style={{ fontSize: 12, color: "#444", letterSpacing: 1, marginBottom: 6 }}>📖 CITEȘTE AZI</div>
-                        <div style={{ fontSize: 15, color: "#888" }}>{day.read}</div>
-                      </div>
-                    )}
-                    <div>
-                      <div style={{ fontSize: 12, color: "#444", letterSpacing: 1, marginBottom: 8 }}>
-                        {checkpoint ? "🏁 CHECKPOINT" : "🔨 EXERCIȚIU"}
-                      </div>
-                      <div style={{
-                        fontSize: 16, color: "#D0D0D0", lineHeight: 1.8,
-                        padding: "14px 16px",
-                        background: "#080808",
-                        borderRadius: 8,
-                        borderLeft: `3px solid ${color}`
-                      }}>
-                        {day.task}
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => toggleDay(key)}
-                      style={{
-                        marginTop: 14, padding: "10px 20px",
-                        borderRadius: 6, border: `1px solid ${done ? "#222" : color}`,
-                        background: done ? "transparent" : color,
-                        color: done ? "#555" : "#000",
-                        fontSize: 14, fontWeight: 600, cursor: "pointer",
-                        fontFamily: "inherit"
-                      }}
-                    >
-                      {done ? "Marchează ca neterminat" : "✓ Am terminat ziua asta"}
-                    </button>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Checkpoint banner */}
-        {weekData?.checkpoint && (
-          <div style={{
-            marginTop: 20,
-            padding: "14px 18px",
-            background: "#111",
-            borderRadius: 8,
-            border: `1px solid ${color}33`
-          }}>
-            <div style={{ fontSize: 12, color: "#555", letterSpacing: 1, marginBottom: 6 }}>
-              🏁 CHECKPOINT SĂPTĂMÂNA {currentWeek}
-            </div>
-            <div style={{ fontSize: 15, color: "#888", lineHeight: 1.6 }}>
-              {weekData.checkpoint}
-            </div>
+      ) : (
+        <div style={{ padding: "28px 40px 80px" }}>
+          <div style={{ fontSize: 16, color: "#666", marginBottom: 28, lineHeight: 1.7, padding: "14px 18px", background: "#111", borderRadius: 10, border: "1px solid #1E1E1E" }}>
+            💡 Exercițiile sunt opționale — le faci când vrei să practici extra. Deschide săptămâna la care ești și lucrează la ele după ce ai citit.
           </div>
-        )}
-
-        {/* Week nav bottom */}
-        <div style={{ display: "flex", gap: 12, marginTop: 28 }}>
-          {currentWeek > 1 && (
-            <button onClick={() => setCurrentWeek(w => w - 1)} style={{
-              flex: 1, padding: "13px", borderRadius: 8,
-              border: "1px solid #222", background: "transparent",
-              color: "#666", fontSize: 15, cursor: "pointer", fontFamily: "inherit"
-            }}>
-              ← Săptămâna {currentWeek - 1}
-            </button>
-          )}
-          {currentWeek < 25 && (
-            <button onClick={() => setCurrentWeek(w => w + 1)} style={{
-              flex: 1, padding: "13px", borderRadius: 8,
-              border: `1px solid ${color}`, background: "transparent",
-              color: color, fontSize: 15, cursor: "pointer", fontWeight: 600, fontFamily: "inherit"
-            }}>
-              Săptămâna {currentWeek + 1} →
-            </button>
-          )}
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {weeks.map(w => {
+              const isOpen = expandedExWeek === w.week;
+              const wColor = w.color;
+              return (
+                <div key={w.week} style={{ borderRadius: 10, border: `1px solid ${isOpen ? wColor + "55" : "#1E1E1E"}`, background: "#0E0E0E", overflow: "hidden" }}>
+                  <div onClick={() => setExpandedExWeek(isOpen ? null : w.week)} style={{ padding: "16px 20px", cursor: "pointer", display: "flex", alignItems: "center", gap: 14 }}>
+                    <div style={{ width: 36, height: 36, borderRadius: 8, background: wColor + "22", border: `1px solid ${wColor}44`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: wColor, flexShrink: 0 }}>
+                      {w.week}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 11, color: "#444", letterSpacing: 1, marginBottom: 3 }}>{w.phaseTitle.toUpperCase()}</div>
+                      <div style={{ fontSize: 16, fontWeight: 600, color: "#E8E8E8" }}>{w.topic}</div>
+                    </div>
+                    <div style={{ fontSize: 18, color: "#333", transform: isOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>▾</div>
+                  </div>
+                  {isOpen && (
+                    <div style={{ borderTop: "1px solid #1A1A1A", padding: "16px 20px", display: "flex", flexDirection: "column", gap: 16 }}>
+                      {w.days.map(day => (
+                        <div key={day.day} style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+                          <div style={{ width: 30, height: 30, borderRadius: 6, background: wColor + "22", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: wColor, flexShrink: 0, marginTop: 1 }}>
+                            {day.day === 7 ? "🏁" : day.day}
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: 15, fontWeight: 600, color: "#CCC", marginBottom: 5 }}>{day.title}</div>
+                            <div style={{ fontSize: 14, color: "#666", lineHeight: 1.7 }}>{day.task}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
